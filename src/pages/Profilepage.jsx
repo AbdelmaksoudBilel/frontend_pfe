@@ -31,7 +31,7 @@ import AppText   from "../components/atoms/AppText";
 import { useAuth }  from "../hooks/useAuth";
 import api          from "../services/api";
 
-const BASE_URL = import.meta.env.VITE_API_URL?.replace("/api","") || "http://localhost:5000";
+const BASE_URL = import.meta.env.VITE_API_URL?.replace("/api","") || "http://localhost:3001";
 
 const PROFILE_CFG = {
   TSA   : { color:"#3BBDE8", label:"TSA",    icon:"🧠" },
@@ -78,7 +78,14 @@ function TabInfos({ user, onSaved }) {
         });
       }
       // Mettre à jour infos
-      await api.put("/users/me", form);
+      await api.put("/users/me", form).then(r => {
+        let newuser = JSON.parse(localStorage.getItem("mc_user"));
+        newuser.firstName = form.firstName;
+        newuser.lastName  = form.lastName;
+        newuser.phone     = form.phone;
+        newuser.language  = form.language;
+        localStorage.setItem("mc_user", JSON.stringify(newuser));
+      });
       setSuccess(true);
       onSaved();
     } catch (e) {
@@ -100,14 +107,14 @@ function TabInfos({ user, onSaved }) {
               border:"3px solid", borderColor:"primary.main" }}>
             {!avatarPreview && `${form.firstName?.[0] || ""}${form.lastName?.[0] || ""}`}
           </Avatar>
-          <IconButton
+          {/* <IconButton
             size="small"
             onClick={() => avatarRef.current?.click()}
             sx={{ position:"absolute", bottom:0, right:0,
               bgcolor:"primary.main", color:"white",
               "&:hover":{ bgcolor:"primary.dark" }, p:0.8 }}>
             <PhotoCameraIcon sx={{ fontSize:16 }} />
-          </IconButton>
+          </IconButton> */}
           <input ref={avatarRef} type="file" accept="image/*"
             style={{ display:"none" }} onChange={handleAvatarChange} />
         </Box>

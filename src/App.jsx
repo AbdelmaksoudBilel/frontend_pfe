@@ -1,26 +1,32 @@
 // src/App.jsx
-// ─────────────────────────────────────────────────────────────────
-// Point d'entrée — Providers : Redux + MUI Theme + Router
-// ─────────────────────────────────────────────────────────────────
-import { Provider }            from "react-redux";
-import { ThemeProvider }       from "@mui/material/styles";
-import CssBaseline             from "@mui/material/CssBaseline";
-import { SnackbarProvider }    from "notistack";
+import { Provider }         from "react-redux";
+import CssBaseline          from "@mui/material/CssBaseline";
+import { SnackbarProvider } from "notistack";
 
-import store                   from "./store";
-import theme                   from "./theme/theme";
-import AppRouter               from "./router";
+import store              from "./store";
+import AppRouter          from "./router";
+import TranslationWrapper from "./components/TranslationWrapper";
 
 export default function App() {
   return (
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
+      {/*
+        TranslationWrapper :
+          - Dans le Provider Redux → accès à user.language
+          - Gère RTL/LTR + police Cairo/Nunito automatiquement
+          - Déclenche Google Translate quand user.language change
+          - Le div#google_translate_element est dans index.html (pas ici)
+      */}
+      <TranslationWrapper>
         <CssBaseline />
-        <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          autoHideDuration={4000}>
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          autoHideDuration={4000}
+        >
           <AppRouter />
         </SnackbarProvider>
-      </ThemeProvider>
+      </TranslationWrapper>
     </Provider>
   );
 }
