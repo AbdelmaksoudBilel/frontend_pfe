@@ -4,7 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { SnackbarProvider } from "notistack";
 
 import store from "./store";
-import AppRouter from "./router";
+import AppRouter from "./router/index";
 import TranslationWrapper from "./components/TranslationWrapper";
 
 export default function App() {
