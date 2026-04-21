@@ -42,32 +42,33 @@ import AppText from "../../components/atoms/AppText";
 import AppButton from "../../components/atoms/AppButton";
 import AdminLayout from "./AdminLayout";
 import api from "../../services/api";
+import { useTranslation } from "../../hooks/useTranslation";
 
 // ── Pipeline steps definition ────────────────────────────────────
 const STEPS = [
-  { n: 1,  label: "Nettoyage",     desc: "URLs, ponctuation, chiffres" },
-  { n: 2,  label: "Langue",        desc: "lingua fr/ar/en" },
-  { n: 3,  label: "Tokenisation",  desc: "découpage par mot" },
-  { n: 4,  label: "Segmentation",  desc: "découpage par phrase" },
-  { n: 5,  label: "Stopwords",     desc: "filtrage FR+AR+EN" },
-  { n: 6,  label: "Lemmatisation", desc: "spaCy fr_core_news_sm" },
-  { n: 7,  label: "Fréquence",     desc: "Counter → top keywords" },
-  { n: 8,  label: "Questions",     desc: "regex patterns" },
-  { n: 9,  label: "Clustering",    desc: "TF-IDF + KMeans" },
-  { n: 10, label: "Sentiment",     desc: "lexique pos/neg/neu" },
+  { n: 1, label: "Nettoyage", desc: "URLs, ponctuation, chiffres" },
+  { n: 2, label: "Langue", desc: "lingua fr/ar/en" },
+  { n: 3, label: "Tokenisation", desc: "découpage par mot" },
+  { n: 4, label: "Segmentation", desc: "découpage par phrase" },
+  { n: 5, label: "Stopwords", desc: "filtrage FR+AR+EN" },
+  { n: 6, label: "Lemmatisation", desc: "spaCy fr_core_news_sm" },
+  { n: 7, label: "Fréquence", desc: "Counter → top keywords" },
+  { n: 8, label: "Questions", desc: "regex patterns" },
+  { n: 9, label: "Clustering", desc: "TF-IDF + KMeans" },
+  { n: 10, label: "Sentiment", desc: "lexique pos/neg/neu" },
 ];
 
 // ── Pipeline visualizer ──────────────────────────────────────────
-function PipelineBar({ currentStep }) {
+function PipelineBar({ currentStep, t }) {
   return (
     <Box sx={{ overflowX: "auto", pb: 0.5 }}>
       <Box sx={{ display: "flex", gap: 0, minWidth: 700 }}>
         {STEPS.map((s, i) => {
-          const done    = currentStep > s.n;
-          const active  = currentStep === s.n;
+          const done = currentStep > s.n;
+          const active = currentStep === s.n;
           return (
             <Box key={s.n} sx={{ display: "flex", alignItems: "center", flex: 1 }}>
-              <Tooltip title={s.desc} arrow>
+              <Tooltip title={t(`adminNLP.step${s.n}Desc`)} arrow>
                 <Box sx={{
                   flex: 1, py: 1, px: 0.5, textAlign: "center",
                   borderRadius: 1.5,
@@ -92,7 +93,7 @@ function PipelineBar({ currentStep }) {
                     color: active ? "primary.dark" : done ? "#276749" : "text.disabled",
                     lineHeight: 1.2,
                   }}>
-                    {s.label}
+                    {t(`adminNLP.step${s.n}`)}
                   </AppText>
                 </Box>
               </Tooltip>
@@ -108,10 +109,10 @@ function PipelineBar({ currentStep }) {
 }
 
 // ── Word Cloud ───────────────────────────────────────────────────
-function WordCloud({ words }) {
-  if (!words?.length) return <AppText variant="body2" color="text.disabled" sx={{ py: 3, textAlign: "center" }}>Aucun mot-clé</AppText>;
+function WordCloud({ words, t }) {
+  if (!words?.length) return <AppText variant="body2" color="text.disabled" sx={{ py: 3, textAlign: "center" }}>{t("adminNLP.noKeywords")}</AppText>;
   const maxV = Math.max(...words.map(w => w.value), 1);
-  const palette = ["#3BBDE8","#F5A623","#9F7AEA","#48BB78","#F56565","#ED8936","#4299E1","#38B2AC","#ECC94B","#E53E3E","#2B6CB0","#805AD5"];
+  const palette = ["#3BBDE8", "#F5A623", "#9F7AEA", "#48BB78", "#F56565", "#ED8936", "#4299E1", "#38B2AC", "#ECC94B", "#E53E3E", "#2B6CB0", "#805AD5"];
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.2, p: 1, justifyContent: "center", minHeight: 100 }}>
       {words.slice(0, 50).map(({ text, value }, i) => {
@@ -135,7 +136,7 @@ function WordCloud({ words }) {
 function KeywordsBars({ keywords }) {
   if (!keywords?.length) return null;
   const max = Math.max(...keywords.map(k => k.count), 1);
-  const colors = ["#3BBDE8","#1A7FA8","#7DD6F0","#F5A623","#D4891A","#9F7AEA","#805AD5","#48BB78","#276749","#F56565","#ED8936","#ECC94B"];
+  const colors = ["#3BBDE8", "#1A7FA8", "#7DD6F0", "#F5A623", "#D4891A", "#9F7AEA", "#805AD5", "#48BB78", "#276749", "#F56565", "#ED8936", "#ECC94B"];
   return (
     <Box>
       {keywords.slice(0, 12).map((kw, i) => (
@@ -151,8 +152,10 @@ function KeywordsBars({ keywords }) {
             </Box>
           </Box>
           <LinearProgress variant="determinate" value={(kw.count / max) * 100}
-            sx={{ height: 7, borderRadius: 4, bgcolor: "#f0f4f8",
-              "& .MuiLinearProgress-bar": { bgcolor: colors[i % colors.length], borderRadius: 4, transition: "width 0.8s ease" } }} />
+            sx={{
+              height: 7, borderRadius: 4, bgcolor: "#f0f4f8",
+              "& .MuiLinearProgress-bar": { bgcolor: colors[i % colors.length], borderRadius: 4, transition: "width 0.8s ease" }
+            }} />
         </Box>
       ))}
     </Box>
@@ -160,14 +163,14 @@ function KeywordsBars({ keywords }) {
 }
 
 // ── Topics Pie Chart (SVG) ───────────────────────────────────────
-function TopicsPie({ clusters }) {
+function TopicsPie({ clusters, t, clustersParam }) {
   if (!clusters?.length) return (
     <AppText variant="body2" color="text.disabled" sx={{ py: 3, textAlign: "center" }}>
-      Clustering indisponible (minimum ~10 messages requis)
+      {t("adminNLP.clusteringUnavailable")}
     </AppText>
   );
-  const colors = ["#3BBDE8","#F5A623","#9F7AEA","#48BB78","#F56565"];
-  const total  = clusters.reduce((s, c) => s + c.count, 0) || 1;
+  const colors = ["#3BBDE8", "#F5A623", "#9F7AEA", "#48BB78", "#F56565"];
+  const total = clusters.reduce((s, c) => s + c.count, 0) || 1;
   const cx = 75, cy = 75, R = 65;
   let a = -Math.PI / 2;
   const sectors = clusters.map((c, i) => {
@@ -184,12 +187,12 @@ function TopicsPie({ clusters }) {
         <svg width="150" height="150" viewBox="0 0 150 150">
           {sectors.map((s, i) => (
             <path key={i} d={s.d} fill={s.color} opacity={0.85}>
-              <title>{s.label || `Sujet ${i+1}`} — {Math.round((s.count/total)*100)}%</title>
+              <title>{s.label || t("adminNLP.topicLabel").replace("{{num}}", i + 1)} — {Math.round((s.count / total) * 100)}%</title>
             </path>
           ))}
           <circle cx={cx} cy={cy} r={32} fill="white" />
-          <text x={cx} y={cy-4} textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1a202c">{total}</text>
-          <text x={cx} y={cy+10} textAnchor="middle" fontSize="7.5" fill="#94a3b8">messages</text>
+          <text x={cx} y={cy - 4} textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1a202c">{total}</text>
+          <text x={cx} y={cy + 12} textAnchor="middle" fontSize="7.5" fill="#94a3b8">{t("adminNLP.messages")}</text>
         </svg>
       </Box>
       <Box sx={{ flex: 1, minWidth: 180 }}>
@@ -198,7 +201,7 @@ function TopicsPie({ clusters }) {
             <Box sx={{ width: 10, height: 10, borderRadius: 1, bgcolor: s.color, flexShrink: 0, mt: 0.3 }} />
             <Box>
               <AppText variant="caption" sx={{ fontWeight: 800, color: "text.primary", display: "block" }}>
-                {s.label || `Sujet ${i + 1}`} — {Math.round((s.count / total) * 100)}%
+                {s.label || t("adminNLP.topicLabel").replace("{{num}}", i + 1)} — {Math.round((s.count / total) * 100)}%
               </AppText>
               <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
                 {(s.keywords || []).slice(0, 4).map(kw => (
@@ -215,12 +218,12 @@ function TopicsPie({ clusters }) {
 }
 
 // ── Sentiment Donut ──────────────────────────────────────────────
-function SentimentDonut({ data }) {
+function SentimentDonut({ data, t }) {
   if (!data) return null;
   const segs = [
-    { label: "Positif", key: "positive", color: "#48BB78", emoji: "😊" },
-    { label: "Neutre",  key: "neutral",  color: "#CBD5E0", emoji: "😐" },
-    { label: "Négatif", key: "negative", color: "#F56565", emoji: "😔" },
+    { label: t("adminNLP.positive"), key: "positive", color: "#48BB78", emoji: "😊" },
+    { label: t("adminNLP.neutral"), key: "neutral", color: "#CBD5E0", emoji: "😐" },
+    { label: t("adminNLP.negative"), key: "negative", color: "#F56565", emoji: "😔" },
   ].map(s => ({ ...s, count: data[s.key]?.count || 0, pct: data[s.key]?.percent || 0 }));
 
   const total = segs.reduce((s, e) => s + e.count, 0) || 1;
@@ -307,10 +310,11 @@ function Stat({ icon, label, value, color }) {
 // PAGE PRINCIPALE
 // ═════════════════════════════════════════════════════════════════
 export default function AdminNLP() {
-  const [result,       setResult]       = useState(null);
-  const [loading,      setLoading]      = useState(false);
-  const [error,        setError]        = useState("");
-  const [currentStep,  setCurrentStep]  = useState(0);
+  const { t, isRTL } = useTranslation();
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [currentStep, setCurrentStep] = useState(0);
   const [params, setParams] = useState({ days: 30, n_keywords: 20, n_questions: 10, n_clusters: 5 });
 
   const runAnalysis = async () => {
@@ -346,13 +350,13 @@ export default function AdminNLP() {
       {/* Header */}
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 4 }}>
         <Box>
-          <AppText variant="h3" sx={{ fontWeight: 900 }}>Analyse NLP — Messages parents</AppText>
+          <AppText variant="h3" sx={{ fontWeight: 900 }}>{t("adminNLP.title")}</AppText>
           <AppText variant="body2" color="text.secondary">
-            Pipeline 10 étapes · 500 messages MongoDB · lingua + spaCy + TF-IDF + KMeans
+            {t("adminNLP.subtitle")}
           </AppText>
         </Box>
         {result && (
-          <Tooltip title="Relancer">
+          <Tooltip title={t("adminNLP.relaunch")} arrow>
             <IconButton onClick={runAnalysis} disabled={loading}
               sx={{ bgcolor: "background.blue", color: "primary.main" }}>
               <RefreshIcon />
@@ -366,18 +370,20 @@ export default function AdminNLP() {
         <CardContent sx={{ p: 2.5 }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1.5 }}>
             <AppText variant="body2" sx={{ fontWeight: 800, color: "text.secondary" }}>
-              Pipeline Python NLP — 10 étapes
+              {t("adminNLP.pipelineTitle")}
             </AppText>
             <Box sx={{ display: "flex", gap: 1 }}>
-              {loading && <Chip label="En cours…" size="small"
-                sx={{ bgcolor: "background.blue", color: "primary.dark", fontWeight: 700,
+              {loading && <Chip label={t("adminNLP.running")} size="small"
+                sx={{
+                  bgcolor: "background.blue", color: "primary.dark", fontWeight: 700,
                   animation: "blink 1.2s ease infinite",
-                  "@keyframes blink": { "0%,100%": { opacity: 1 }, "50%": { opacity: 0.5 } } }} />}
-              {currentStep === 11 && <Chip label="✓ Terminé" size="small"
+                  "@keyframes blink": { "0%,100%": { opacity: 1 }, "50%": { opacity: 0.5 } }
+                }} />}
+              {currentStep === 11 && <Chip label={t("adminNLP.done")} size="small"
                 sx={{ bgcolor: "#E6F7EE", color: "#276749", fontWeight: 700 }} />}
             </Box>
           </Box>
-          <PipelineBar currentStep={currentStep} />
+          <PipelineBar currentStep={currentStep} t={t} />
         </CardContent>
       </Card>
 
@@ -386,9 +392,9 @@ export default function AdminNLP() {
         <CardContent sx={{ p: 2.5 }}>
           <Grid container spacing={2} alignItems="flex-end">
             {[
-              { label: "Période", key: "days",       opts: [[7,"7 jours"],[30,"30 jours"],[90,"3 mois"],[0,"Tout"]] },
-              { label: "Mots-clés", key: "n_keywords", opts: [[10,"10"],[20,"20"],[30,"30"],[50,"50"]] },
-              { label: "Topics KMeans", key: "n_clusters", opts: [[3,"3"],[5,"5"],[7,"7"],[10,"10"]] },
+              { label: t("adminNLP.periodLabel"), key: "days", opts: [[7, t("adminNLP.period7")], [30, t("adminNLP.period30")], [90, t("adminNLP.period90")], [0, t("adminNLP.periodAll")]] },
+              { label: t("adminNLP.keywordsLabel"), key: "n_keywords", opts: [[10, "10"], [20, "20"], [30, "30"], [50, "50"]] },
+              { label: t("adminNLP.clustersLabel"), key: "n_clusters", opts: [[3, "3"], [5, "5"], [7, "7"], [10, "10"]] },
             ].map(p => (
               <Grid item xs={12} sm={3} key={p.key}>
                 <AppText variant="caption" sx={{ fontWeight: 700, color: "text.secondary", mb: 0.5, display: "block" }}>{p.label}</AppText>
@@ -402,7 +408,7 @@ export default function AdminNLP() {
             <Grid item xs={12} sm={3}>
               <AppButton fullWidth size="large" onClick={runAnalysis} loading={loading}
                 startIcon={!loading && <BrainIcon />} sx={{ py: 1.4 }}>
-                {loading ? "Analyse…" : "Lancer l'analyse"}
+                {loading ? t("adminNLP.analyzing") : t("adminNLP.launchBtn")}
               </AppButton>
             </Grid>
           </Grid>
@@ -414,8 +420,8 @@ export default function AdminNLP() {
       {loading && (
         <Box sx={{ textAlign: "center", py: 6 }}>
           <CircularProgress size={48} sx={{ color: "primary.main", mb: 2 }} />
-          <AppText variant="h5" sx={{ mb: 0.5 }}>Analyse en cours…</AppText>
-          <AppText variant="body2" color="text.secondary">Node.js → 500 messages MongoDB → Python NLP pipeline</AppText>
+          <AppText variant="h5" sx={{ mb: 0.5 }}>{t("adminNLP.analyzingInProgress")}</AppText>
+          <AppText variant="body2" color="text.secondary">{t("adminNLP.pipelineDesc")}</AppText>
         </Box>
       )}
 
@@ -423,18 +429,18 @@ export default function AdminNLP() {
         <Box>
           {/* Meta chips */}
           <Box sx={{ display: "flex", gap: 1.5, mb: 3, flexWrap: "wrap" }}>
-            <Chip label={`${result.total_messages_analyzed} messages analysés`}
+            <Chip label={`${result.total_messages_analyzed} ${t("adminNLP.analyzed")}`}
               sx={{ bgcolor: "background.blue", color: "primary.dark", fontWeight: 700 }} />
-            <Chip label={`Période : ${result.period_days === "tout" ? "Tout l'historique" : `${result.period_days} jours`}`}
+            <Chip label={result.period_days === "tout" ? t("adminNLP.periodAllHistory") : t("adminNLP.periodDays").replace("{{days}}", result.period_days)}
               sx={{ bgcolor: "background.orange", color: "secondary.dark", fontWeight: 700 }} />
           </Box>
 
           {/* Stat cards */}
           <Box sx={{ display: "flex", gap: 2, mb: 3, flexWrap: "wrap" }}>
-            <Stat icon={<TextIcon />}  label="Mots/message moy." value={result.avg_msg_length}          color="#3BBDE8" />
-            <Stat icon={<TagIcon />}   label="Mots-clés extraits" value={result.top_keywords?.length}   color="#F5A623" />
-            <Stat icon={<QIcon />}     label="Questions détectées" value={result.top_questions?.length} color="#9F7AEA" />
-            <Stat icon={<PieIcon />}   label="Topics identifiés"  value={result.topic_clusters?.length} color="#48BB78" />
+            <Stat icon={<TextIcon />} label={t("adminNLP.avgMsgLen")} value={result.avg_msg_length} color="#3BBDE8" />
+            <Stat icon={<TagIcon />} label={t("adminNLP.keywordsCount")} value={result.top_keywords?.length} color="#F5A623" />
+            <Stat icon={<QIcon />} label={t("adminNLP.questionsCount")} value={result.top_questions?.length} color="#9F7AEA" />
+            <Stat icon={<PieIcon />} label={t("adminNLP.topicsCount")} value={result.topic_clusters?.length} color="#48BB78" />
           </Box>
 
           <Grid container spacing={2.5}>
@@ -444,10 +450,10 @@ export default function AdminNLP() {
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
                     <TagIcon sx={{ color: "primary.main" }} />
-                    <AppText variant="h5" sx={{ fontWeight: 800 }}>Nuage de mots</AppText>
-                    <Chip label="étapes 5–7" size="small" sx={{ bgcolor: "background.blue", color: "primary.dark", fontWeight: 600, fontSize: "0.65rem" }} />
+                    <AppText variant="h5" sx={{ fontWeight: 800 }}>{t("adminNLP.wordCloud")}</AppText>
+                    <Chip label={`${t("adminNLP.steps")} 5–7`} size="small" sx={{ bgcolor: "background.blue", color: "primary.dark", fontWeight: 600, fontSize: "0.65rem" }} />
                   </Box>
-                  <WordCloud words={result.word_cloud_data} />
+                  <WordCloud words={result.word_cloud_data} t={t} />
                 </CardContent>
               </Card>
             </Grid>
@@ -458,10 +464,10 @@ export default function AdminNLP() {
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
                     <DonutIcon sx={{ color: "#F5A623" }} />
-                    <AppText variant="h5" sx={{ fontWeight: 800 }}>Sentiment</AppText>
-                    <Chip label="étape 10" size="small" sx={{ bgcolor: "background.orange", color: "secondary.dark", fontWeight: 600, fontSize: "0.65rem" }} />
+                    <AppText variant="h5" sx={{ fontWeight: 800 }}>{t("adminNLP.sentiment")}</AppText>
+                    <Chip label={`${t("adminNLP.steps")} 10`} size="small" sx={{ bgcolor: "background.orange", color: "secondary.dark", fontWeight: 600, fontSize: "0.65rem" }} />
                   </Box>
-                  <SentimentDonut data={result.sentiment} />
+                  <SentimentDonut data={result.sentiment} t={t} />
                 </CardContent>
               </Card>
             </Grid>
@@ -472,8 +478,8 @@ export default function AdminNLP() {
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
                     <BarIcon sx={{ color: "#9F7AEA" }} />
-                    <AppText variant="h5" sx={{ fontWeight: 800 }}>Top mots-clés</AppText>
-                    <Chip label="étapes 6–7 · lemmatisation + Counter" size="small" sx={{ bgcolor: "#F3F0FF", color: "#805AD5", fontWeight: 600, fontSize: "0.62rem" }} />
+                    <AppText variant="h5" sx={{ fontWeight: 800 }}>{t("adminNLP.topKeywords")}</AppText>
+                    <Chip label={t("adminNLP.lemmatizationCounter")} size="small" sx={{ bgcolor: "#F3F0FF", color: "#805AD5", fontWeight: 600, fontSize: "0.62rem" }} />
                   </Box>
                   <KeywordsBars keywords={result.top_keywords} />
                 </CardContent>
@@ -486,8 +492,8 @@ export default function AdminNLP() {
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
                     <LangIcon sx={{ color: "#3BBDE8" }} />
-                    <AppText variant="h5" sx={{ fontWeight: 800 }}>Distribution langues</AppText>
-                    <Chip label="étape 2 · lingua" size="small" sx={{ bgcolor: "background.blue", color: "primary.dark", fontWeight: 600, fontSize: "0.65rem" }} />
+                    <AppText variant="h5" sx={{ fontWeight: 800 }}>{t("adminNLP.langDist")}</AppText>
+                    <Chip label={t("adminNLP.lingua")} size="small" sx={{ bgcolor: "background.blue", color: "primary.dark", fontWeight: 600, fontSize: "0.65rem" }} />
                   </Box>
                   <LangBars data={result.lang_distribution} />
                 </CardContent>
@@ -500,11 +506,11 @@ export default function AdminNLP() {
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2.5 }}>
                     <PieIcon sx={{ color: "#48BB78" }} />
-                    <AppText variant="h5" sx={{ fontWeight: 800 }}>Topics détectés</AppText>
-                    <Chip label={`étape 9 · TF-IDF + KMeans (${params.n_clusters} clusters)`} size="small"
+                    <AppText variant="h5" sx={{ fontWeight: 800 }}>{t("adminNLP.topics")}</AppText>
+                    <Chip label={t("adminNLP.tfidfKmeans").replace("{{clusters}}", "clustersParam")} size="small"
                       sx={{ bgcolor: "#E6F7EE", color: "#276749", fontWeight: 600, fontSize: "0.65rem" }} />
                   </Box>
-                  <TopicsPie clusters={result.topic_clusters} />
+                  <TopicsPie clusters={result.topic_clusters} t={t} clustersParam={params.n_clusters} />
                 </CardContent>
               </Card>
             </Grid>
@@ -515,13 +521,13 @@ export default function AdminNLP() {
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2.5 }}>
                     <QIcon sx={{ color: "#F5A623" }} />
-                    <AppText variant="h5" sx={{ fontWeight: 800 }}>Questions fréquentes</AppText>
-                    <Chip label="étape 8 · regex patterns" size="small"
+                    <AppText variant="h5" sx={{ fontWeight: 800 }}>{t("adminNLP.questions")}</AppText>
+                    <Chip label={t("adminNLP.regexPatterns")} size="small"
                       sx={{ bgcolor: "background.orange", color: "secondary.dark", fontWeight: 600, fontSize: "0.65rem" }} />
                   </Box>
                   {!result.top_questions?.length ? (
                     <AppText variant="body2" color="text.disabled" sx={{ py: 2, textAlign: "center" }}>
-                      Aucune question détectée dans les messages analysés
+                      {t("adminNLP.noQuestionsDetected")}
                     </AppText>
                   ) : (
                     <Grid container spacing={1.5}>
@@ -544,8 +550,10 @@ export default function AdminNLP() {
                               {question.length > 90 ? question.slice(0, 90) + "…" : question}
                             </AppText>
                             <Chip label={`×${count}`} size="small"
-                              sx={{ height: 18, fontSize: "0.62rem", bgcolor: "background.blue",
-                                color: "primary.dark", fontWeight: 800, flexShrink: 0 }} />
+                              sx={{
+                                height: 18, fontSize: "0.62rem", bgcolor: "background.blue",
+                                color: "primary.dark", fontWeight: 800, flexShrink: 0
+                              }} />
                           </Box>
                         </Grid>
                       ))}
@@ -562,15 +570,14 @@ export default function AdminNLP() {
       {!loading && !result && !error && (
         <Box sx={{ textAlign: "center", py: 8 }}>
           <BrainIcon sx={{ fontSize: 64, color: "primary.main", mb: 2, opacity: 0.35 }} />
-          <AppText variant="h4" sx={{ fontWeight: 800, mb: 1 }}>Analyse NLP prête</AppText>
+          <AppText variant="h4" sx={{ fontWeight: 800, mb: 1 }}>{t("adminNLP.ready")}</AppText>
           <AppText variant="body2" color="text.secondary" sx={{ mb: 0.5, maxWidth: 520, mx: "auto" }}>
-            Pipeline 10 étapes : nettoyage · détection langue (lingua) · tokenisation ·
-            stopwords · lemmatisation (spaCy) · clustering TF-IDF + KMeans · sentiment lexique
+            {t("adminNLP.readyDescFull")}
           </AppText>
           <AppText variant="caption" color="text.disabled" sx={{ display: "block", mb: 4 }}>
-            Visualisations : bar chart · nuage de mots · pie chart topics · donut sentiment · bar chart langues
+            {t("adminNLP.visualizations")}
           </AppText>
-          <AppButton size="large" startIcon={<BrainIcon />} onClick={runAnalysis}>Lancer l'analyse NLP</AppButton>
+          <AppButton size="large" startIcon={<BrainIcon />} onClick={runAnalysis}>{t("adminNLP.launchBtn")}</AppButton>
         </Box>
       )}
     </AdminLayout>

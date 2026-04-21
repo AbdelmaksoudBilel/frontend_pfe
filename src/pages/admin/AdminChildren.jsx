@@ -28,20 +28,21 @@ import AppText from "../../components/atoms/AppText";
 import AppButton from "../../components/atoms/AppButton";
 import AdminLayout from "./AdminLayout";
 import api from "../../services/api";
+import { useTranslation } from "../../hooks/useTranslation";
 
 const BASE_URL = import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:3001";
 
 const PROFILE_CFG = {
-  TSA   : { color: "#3BBDE8", bg: "#EBF7FE", label: "TSA" },
-  RM    : { color: "#F5A623", bg: "#FFF8EE", label: "DI"  },
-  MIXTE : { color: "#9F7AEA", bg: "#F3F0FF", label: "Mixte" },
+  TSA: { color: "#3BBDE8", bg: "#EBF7FE", label: "TSA" },
+  RM: { color: "#F5A623", bg: "#FFF8EE", label: "DI" },
+  MIXTE: { color: "#9F7AEA", bg: "#F3F0FF", label: "Mixte" },
   Normal: { color: "#48BB78", bg: "#E6F7EE", label: "Normal" },
 };
 
 const QCHAT_LABELS = [
-  "A1 — Répond au nom","A2 — Contact visuel","A3 — Pointe pour demander",
-  "A4 — Pointe pour partager","A5 — Jeu symbolique","A6 — Suit le regard",
-  "A7 — Réconforte autrui","A8 — Premiers mots","A9 — Gestes simples","A10 — Regarde dans le vide",
+  "A1 — Répond au nom", "A2 — Contact visuel", "A3 — Pointe pour demander",
+  "A4 — Pointe pour partager", "A5 — Jeu symbolique", "A6 — Suit le regard",
+  "A7 — Réconforte autrui", "A8 — Premiers mots", "A9 — Gestes simples", "A10 — Regarde dans le vide",
 ];
 
 // ─────────────────────────────────────────────────────────────────
@@ -56,8 +57,10 @@ function ProbBar({ label, value, color }) {
         <AppText variant="caption" sx={{ fontWeight: 900, color }}>{pct}%</AppText>
       </Box>
       <LinearProgress variant="determinate" value={pct}
-        sx={{ height: 8, borderRadius: 4, bgcolor: "#f0f4f8",
-          "& .MuiLinearProgress-bar": { bgcolor: color, borderRadius: 4 } }} />
+        sx={{
+          height: 8, borderRadius: 4, bgcolor: "#f0f4f8",
+          "& .MuiLinearProgress-bar": { bgcolor: color, borderRadius: 4 }
+        }} />
     </Box>
   );
 }
@@ -66,6 +69,7 @@ function ProbBar({ label, value, color }) {
 // DIALOG — Détails complets enfant
 // ─────────────────────────────────────────────────────────────────
 function ChildDetailsDialog({ child, open, onClose }) {
+  const { t } = useTranslation();
   const [tab, setTab] = useState(0);
   if (!child) return null;
 
@@ -106,8 +110,10 @@ function ChildDetailsDialog({ child, open, onClose }) {
               <Avatar src={`${BASE_URL}${child.facePhotoUrl}`}
                 sx={{ width: 48, height: 48, border: "2px solid", borderColor: cfg?.color || "divider" }} />
             ) : (
-              <Avatar sx={{ width: 48, height: 48, bgcolor: cfg?.bg || "background.blue",
-                color: cfg?.color || "primary.main", fontWeight: 900 }}>
+              <Avatar sx={{
+                width: 48, height: 48, bgcolor: cfg?.bg || "background.blue",
+                color: cfg?.color || "primary.main", fontWeight: 900
+              }}>
                 {child.firstName?.[0]}
               </Avatar>
             )}
@@ -116,19 +122,21 @@ function ChildDetailsDialog({ child, open, onClose }) {
               <Box sx={{ display: "flex", gap: 1 }}>
                 {cfg && <Chip label={cfg.label} size="small"
                   sx={{ bgcolor: cfg.bg, color: cfg.color, fontWeight: 700, height: 18, fontSize: "0.65rem" }} />}
-                {age !== null && <AppText variant="caption" color="text.secondary">{age} ans · {child.gender === "M" ? "Garçon" : "Fille"}</AppText>}
+                {age !== null && <AppText variant="caption" color="text.secondary">{age} {t("adminChildren.age")} · {child.gender === "M" ? t("adminChildren.boy") : t("adminChildren.girl")}</AppText>}
               </Box>
             </Box>
           </Box>
           <IconButton onClick={onClose}><CloseIcon /></IconButton>
         </Box>
-        <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mt: 1.5,
+        <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{
+          mt: 1.5,
           "& .MuiTab-root": { minHeight: 36, fontSize: "0.8rem", fontWeight: 700 },
-          "& .MuiTabs-indicator": { bgcolor: "primary.main" } }}>
-          <Tab label="Profil ML/CNN" />
-          <Tab label="Q-Chat-10" />
-          <Tab label="DS Survey RM" />
-          <Tab label="Comportement IA" />
+          "& .MuiTabs-indicator": { bgcolor: "primary.main" }
+        }}>
+          <Tab label={t("adminChildren.profileML")} />
+          <Tab label={t("adminChildren.qchatTab")} />
+          <Tab label={t("adminChildren.dsSurveyTab")} />
+          <Tab label={t("adminChildren.aiProfileTab")} />
         </Tabs>
       </DialogTitle>
       <Divider />
@@ -139,14 +147,16 @@ function ChildDetailsDialog({ child, open, onClose }) {
           <Box sx={{ py: 1 }}>
             {child.prediction ? (
               <>
-                <Box sx={{ textAlign: "center", py: 2, mb: 3,
-                  bgcolor: cfg?.bg, borderRadius: 3, border: "1.5px solid", borderColor: cfg?.color, padding: 2 }}>
-                  <AppText variant="h3" sx={{ color: cfg?.color, fontWeight: 900}}>
+                <Box sx={{
+                  textAlign: "center", py: 2, mb: 3,
+                  bgcolor: cfg?.bg, borderRadius: 3, border: "1.5px solid", borderColor: cfg?.color, padding: 2
+                }}>
+                  <AppText variant="h3" sx={{ color: cfg?.color, fontWeight: 900 }}>
                     {child.prediction}
                   </AppText>
                   {child.confidence && (
                     <AppText variant="body2" color="text.secondary">
-                      Confiance : {Math.round(child.confidence * 100)}%
+                      {t("adminChildren.confidence")} : {Math.round(child.confidence * 100)}%
                     </AppText>
                   )}
                 </Box>
@@ -172,14 +182,14 @@ function ChildDetailsDialog({ child, open, onClose }) {
                 </Grid>
                 {child.lastPredictionAt && (
                   <AppText variant="caption" color="text.disabled" sx={{ display: "block", mt: 2, textAlign: "right" }}>
-                    Dernière analyse : {new Date(child.lastPredictionAt).toLocaleString("fr-FR")}
+                    {t("adminChildren.lastAnalysis")} : {new Date(child.lastPredictionAt).toLocaleString("fr-FR")}
                   </AppText>
                 )}
               </>
             ) : (
               <Box sx={{ textAlign: "center", py: 6 }}>
                 <BrainIcon sx={{ fontSize: 48, color: "text.disabled", mb: 2 }} />
-                <AppText variant="body2" color="text.disabled">Aucune analyse ML effectuée</AppText>
+                <AppText variant="body2" color="text.disabled">{t("adminChildren.noAnalysis")}</AppText>
               </Box>
             )}
           </Box>
@@ -190,8 +200,10 @@ function ChildDetailsDialog({ child, open, onClose }) {
           <Box sx={{ py: 1 }}>
             <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
               <Chip label={`Score : ${child.QChatScore ?? "—"}/10`} size="small"
-                sx={{ bgcolor: (child.QChatScore ?? 0) >= 3 ? "#FFF8EE" : "#E6F7EE",
-                  color: (child.QChatScore ?? 0) >= 3 ? "#F5A623" : "#48BB78", fontWeight: 700 }} />
+                sx={{
+                  bgcolor: (child.QChatScore ?? 0) >= 3 ? "#FFF8EE" : "#E6F7EE",
+                  color: (child.QChatScore ?? 0) >= 3 ? "#F5A623" : "#48BB78", fontWeight: 700
+                }} />
             </Box>
             <TableContainer>
               <Table size="small">
@@ -203,7 +215,7 @@ function ChildDetailsDialog({ child, open, onClose }) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {["A1","A2","A3","A4","A5","A6","A7","A8","A9","A10"].map((k, i) => (
+                  {["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"].map((k, i) => (
                     <TableRow key={k} hover>
                       <TableCell>
                         <AppText variant="caption" sx={{ fontWeight: 600 }}>{QCHAT_LABELS[i]}</AppText>
@@ -251,9 +263,11 @@ function ChildDetailsDialog({ child, open, onClose }) {
                     <TableCell><AppText variant="caption" sx={{ fontWeight: 600 }}>{label}</AppText></TableCell>
                     <TableCell>
                       <Chip label={value !== null && value !== undefined ? value : "—"} size="small"
-                        sx={{ bgcolor: value !== null && value !== undefined ? "background.blue" : "#f0f4f8",
+                        sx={{
+                          bgcolor: value !== null && value !== undefined ? "background.blue" : "#f0f4f8",
                           color: value !== null && value !== undefined ? "primary.dark" : "text.disabled",
-                          fontWeight: 700, height: 18, fontSize: "0.62rem" }} />
+                          fontWeight: 700, height: 18, fontSize: "0.62rem"
+                        }} />
                     </TableCell>
                     <TableCell><AppText variant="caption" color="text.disabled" sx={{ fontSize: "0.68rem" }}>{note}</AppText></TableCell>
                   </TableRow>
@@ -281,7 +295,7 @@ function ChildDetailsDialog({ child, open, onClose }) {
             ) : (
               <Box sx={{ textAlign: "center", py: 6 }}>
                 <AppText variant="body2" color="text.disabled">
-                  Aucune observation IA pour cet enfant
+                  {t("adminChildren.noObservations")}
                 </AppText>
               </Box>
             )}
@@ -300,16 +314,17 @@ function ChildDetailsDialog({ child, open, onClose }) {
 // DIALOG — Modifier enfant
 // ─────────────────────────────────────────────────────────────────
 function EditChildDialog({ child, open, onClose, onSaved }) {
-  const [form, setForm]       = useState({});
+  const { t } = useTranslation();
+  const [form, setForm] = useState({});
   const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (child) setForm({
-      firstName : child.firstName  || "",
-      lastName  : child.lastName   || "",
-      birthDate : child.birthDate ? child.birthDate.split("T")[0] : "",
-      gender    : child.gender     || "",
+      firstName: child.firstName || "",
+      lastName: child.lastName || "",
+      birthDate: child.birthDate ? child.birthDate.split("T")[0] : "",
+      gender: child.gender || "",
     });
   }, [child]);
 
@@ -329,39 +344,39 @@ function EditChildDialog({ child, open, onClose, onSaved }) {
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth
       PaperProps={{ sx: { borderRadius: 4 } }}>
       <DialogTitle sx={{ fontWeight: 800, pb: 1 }}>
-        ✏️ Modifier — {child?.firstName} {child?.lastName}
+        ✏️ {t("adminChildren.editTitle")} — {child?.firstName} {child?.lastName}
       </DialogTitle>
       <Divider />
       <DialogContent sx={{ pt: 3 }}>
         {error && <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>{error}</Alert>}
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="Prénom" value={form.firstName || ""}
+            <TextField fullWidth label={t("wizard.firstName")} value={form.firstName || ""}
               onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))} />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="Nom" value={form.lastName || ""}
+            <TextField fullWidth label={t("wizard.lastName")} value={form.lastName || ""}
               onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))} />
           </Grid>
           <Grid item xs={12} sm={7}>
-            <TextField fullWidth label="Date de naissance" type="date"
+            <TextField fullWidth label={t("wizard.birthDate")} type="date"
               value={form.birthDate || ""}
               onChange={e => setForm(f => ({ ...f, birthDate: e.target.value }))}
               InputLabelProps={{ shrink: true }} />
           </Grid>
           <Grid item xs={12} sm={5}>
-            <TextField fullWidth select label="Genre" value={form.gender || ""}
+            <TextField fullWidth select label={t("wizard.gender")} value={form.gender || ""}
               onChange={e => setForm(f => ({ ...f, gender: e.target.value }))}>
-              <MenuItem value="M">👦 Garçon</MenuItem>
-              <MenuItem value="F">👧 Fille</MenuItem>
+              <MenuItem value="M">👦 {t("wizard.boy")}</MenuItem>
+              <MenuItem value="F">👧 {t("wizard.girl")}</MenuItem>
             </TextField>
           </Grid>
         </Grid>
       </DialogContent>
       <Divider />
       <DialogActions sx={{ px: 3, py: 2, gap: 1 }}>
-        <AppButton variant="outlined" color="secondary" onClick={onClose} disabled={loading}>Annuler</AppButton>
-        <AppButton loading={loading} startIcon={<SaveIcon />} onClick={handleSave}>Sauvegarder</AppButton>
+        <AppButton variant="outlined" color="secondary" onClick={onClose} disabled={loading}>{t("actions.cancel")}</AppButton>
+        <AppButton loading={loading} startIcon={<SaveIcon />} onClick={handleSave}>{t("actions.save")}</AppButton>
       </DialogActions>
     </Dialog>
   );
@@ -371,22 +386,22 @@ function EditChildDialog({ child, open, onClose, onSaved }) {
 // DIALOG — Confirmation suppression
 // ─────────────────────────────────────────────────────────────────
 function ConfirmDeleteDialog({ open, name, onConfirm, onCancel, loading }) {
+  const { t } = useTranslation();
   return (
     <Dialog open={open} onClose={onCancel} maxWidth="xs" fullWidth
       PaperProps={{ sx: { borderRadius: 4 } }}>
-      <DialogTitle sx={{ fontWeight: 800 }}>Supprimer l'enfant</DialogTitle>
+      <DialogTitle sx={{ fontWeight: 800 }}>{t("adminChildren.deleteTitle")}</DialogTitle>
       <Divider />
       <DialogContent sx={{ pt: 2 }}>
         <AppText variant="body2" color="text.secondary">
-          Supprimer définitivement le profil de <strong>{name}</strong> ?
-          Toutes les conversations et évaluations associées seront perdues.
+          {t("adminChildren.deleteWarning", { name })}
         </AppText>
       </DialogContent>
       <Divider />
       <DialogActions sx={{ px: 3, py: 2, gap: 1 }}>
-        <AppButton variant="outlined" color="secondary" onClick={onCancel} disabled={loading}>Annuler</AppButton>
+        <AppButton variant="outlined" color="secondary" onClick={onCancel} disabled={loading}>{t("actions.cancel")}</AppButton>
         <AppButton color="error" onClick={onConfirm} loading={loading} startIcon={<DeleteIcon />}>
-          Supprimer
+          {t("actions.delete")}
         </AppButton>
       </DialogActions>
     </Dialog>
@@ -397,17 +412,19 @@ function ConfirmDeleteDialog({ open, name, onConfirm, onCancel, loading }) {
 // PAGE PRINCIPALE
 // ═════════════════════════════════════════════════════════════════
 export default function AdminChildren() {
-  const [children,    setChildren]    = useState([]);
-  const [loading,     setLoading]     = useState(true);
-  const [search,      setSearch]      = useState("");
-  const [filterProf,  setFilterProf]  = useState("all");
-  const [page,        setPage]        = useState(1);
-  const [error,       setError]       = useState("");
-  const [success,     setSuccess]     = useState("");
+  const [children, setChildren] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [filterProf, setFilterProf] = useState("all");
+  const [page, setPage] = useState(1);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [detailChild, setDetailChild] = useState(null);
-  const [editChild,   setEditChild]   = useState(null);
-  const [deleteInfo,  setDeleteInfo]  = useState(null);
-  const [delLoading,  setDelLoading]  = useState(false);
+  const [editChild, setEditChild] = useState(null);
+  const [deleteInfo, setDeleteInfo] = useState(null);
+  const [delLoading, setDelLoading] = useState(false);
+
+  const { t, isRTL } = useTranslation();
 
   const LIMIT = 12;
 
@@ -441,44 +458,45 @@ export default function AdminChildren() {
     const matchProf = filterProf === "all" || c.prediction === filterProf;
     return matchSearch && matchProf;
   });
-  const total   = filtered.length;
-  const paged   = filtered.slice((page - 1) * LIMIT, page * LIMIT);
+  const total = filtered.length;
+  const paged = filtered.slice((page - 1) * LIMIT, page * LIMIT);
 
   const stats = {
-    total : children.length,
-    TSA   : children.filter(c => c.prediction === "TSA").length,
-    RM    : children.filter(c => c.prediction === "RM").length,
-    MIXTE : children.filter(c => c.prediction === "MIXTE").length,
+    total: children.length,
+    TSA: children.filter(c => c.prediction === "TSA").length,
+    RM: children.filter(c => c.prediction === "RM").length,
+    MIXTE: children.filter(c => c.prediction === "MIXTE").length,
     Normal: children.filter(c => c.prediction === "Normal").length,
-    none  : children.filter(c => !c.prediction).length,
+    none: children.filter(c => !c.prediction).length,
   };
 
   return (
     <AdminLayout>
       {/* Header */}
       <Box sx={{ mb: 4 }}>
-        <AppText variant="h3" sx={{ fontWeight: 900 }}>Gestion des enfants</AppText>
+        <AppText variant="h3" sx={{ fontWeight: 900 }}>{t("adminChildren.title")}</AppText>
         <AppText variant="body2" color="text.secondary">
-          Tous les enfants enregistrés — détails, modification, suppression
+          {t("adminChildren.subtitle")}
         </AppText>
       </Box>
 
-      {error   && <Alert severity="error"   sx={{ mb: 2, borderRadius: 2 }} onClose={() => setError("")}>{error}</Alert>}
+      {error && <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }} onClose={() => setError("")}>{error}</Alert>}
       {success && <Alert severity="success" sx={{ mb: 2, borderRadius: 2 }} onClose={() => setSuccess("")}>{success}</Alert>}
 
       {/* Stats */}
       <Box sx={{ display: "flex", gap: 1.5, mb: 3, flexWrap: "wrap" }}>
         {[
-          { label: "Total",   value: stats.total,  color: "#3BBDE8", filter: "all"    },
-          { label: "TSA",     value: stats.TSA,    color: "#3BBDE8", filter: "TSA"    },
-          { label: "DI (RM)", value: stats.RM,     color: "#F5A623", filter: "RM"     },
-          { label: "Mixte",   value: stats.MIXTE,  color: "#9F7AEA", filter: "MIXTE"  },
-          { label: "Normal",  value: stats.Normal, color: "#48BB78", filter: "Normal" },
-          { label: "Non analysé", value: stats.none, color: "#94a3b8", filter: "none" },
+          { label: t("adminChildren.total"), value: stats.total, color: "#3BBDE8", filter: "all" },
+          { label: t("wizard.profileLabels.TSA"), value: stats.TSA, color: "#3BBDE8", filter: "TSA" },
+          { label: t("wizard.profileLabels.RM"), value: stats.RM, color: "#F5A623", filter: "RM" },
+          { label: t("wizard.profileLabels.MIXTE"), value: stats.MIXTE, color: "#9F7AEA", filter: "MIXTE" },
+          { label: t("wizard.profileLabels.Normal"), value: stats.Normal, color: "#48BB78", filter: "Normal" },
+          { label: t("adminChildren.notAnalyzed"), value: stats.none, color: "#94a3b8", filter: "none" },
         ].map(s => (
           <Box key={s.label}
             onClick={() => { setFilterProf(s.filter === "none" ? "null" : s.filter); setPage(1); }}
-            sx={{ flex: 1, minWidth: 80, textAlign: "center", p: 1.5, borderRadius: 2,
+            sx={{
+              flex: 1, minWidth: 80, textAlign: "center", p: 1.5, borderRadius: 2,
               border: "1.5px solid", cursor: "pointer",
               borderColor: filterProf === (s.filter === "none" ? "null" : s.filter) ? s.color : "divider",
               bgcolor: filterProf === (s.filter === "none" ? "null" : s.filter) ? `${s.color}10` : "background.subtle",
@@ -495,7 +513,7 @@ export default function AdminChildren() {
       <Card elevation={0} sx={{ border: "1.5px solid", borderColor: "divider", borderRadius: 3, mb: 2 }}>
         <CardContent sx={{ p: 2 }}>
           <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-            <TextField size="small" placeholder="Rechercher un enfant..."
+            <TextField size="small" placeholder={t("adminChildren.search")}
               value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
               sx={{ flex: 1, minWidth: 200 }}
               InputProps={{
@@ -506,11 +524,11 @@ export default function AdminChildren() {
             <TextField select size="small" value={filterProf}
               onChange={e => { setFilterProf(e.target.value); setPage(1); }}
               sx={{ minWidth: 180 }} InputProps={{ sx: { borderRadius: 3 } }}>
-              <MenuItem value="all">Tous les profils</MenuItem>
-              <MenuItem value="TSA">TSA</MenuItem>
-              <MenuItem value="RM">DI (RM)</MenuItem>
-              <MenuItem value="MIXTE">Mixte</MenuItem>
-              <MenuItem value="Normal">Normal</MenuItem>
+              <MenuItem value="all">{t("adminChildren.allProfiles")}</MenuItem>
+              <MenuItem value="TSA">{t("wizard.profileLabels.TSA")}</MenuItem>
+              <MenuItem value="RM">{t("wizard.profileLabels.RM")}</MenuItem>
+              <MenuItem value="MIXTE">{t("wizard.profileLabels.MIXTE")}</MenuItem>
+              <MenuItem value="Normal">{t("wizard.profileLabels.Normal")}</MenuItem>
             </TextField>
           </Box>
         </CardContent>
@@ -522,7 +540,7 @@ export default function AdminChildren() {
       ) : paged.length === 0 ? (
         <Box sx={{ textAlign: "center", py: 8 }}>
           <ChildIcon sx={{ fontSize: 48, color: "text.disabled", mb: 2 }} />
-          <AppText variant="h5">Aucun enfant trouvé</AppText>
+          <AppText variant="h5">{t("adminChildren.noChildren")}</AppText>
         </Box>
       ) : (
         <>
@@ -546,8 +564,10 @@ export default function AdminChildren() {
                           <Avatar src={`${BASE_URL}${child.facePhotoUrl}`}
                             sx={{ width: 52, height: 52, border: "2px solid", borderColor: cfg?.color || "divider" }} />
                         ) : (
-                          <Avatar sx={{ width: 52, height: 52, bgcolor: cfg?.bg || "background.blue",
-                            color: cfg?.color || "primary.main", fontWeight: 900, fontSize: 20 }}>
+                          <Avatar sx={{
+                            width: 52, height: 52, bgcolor: cfg?.bg || "background.blue",
+                            color: cfg?.color || "primary.main", fontWeight: 900, fontSize: 20
+                          }}>
                             {child.firstName?.[0]}
                           </Avatar>
                         )}
@@ -556,8 +576,8 @@ export default function AdminChildren() {
                             {child.firstName} {child.lastName}
                           </AppText>
                           <AppText variant="caption" color="text.secondary">
-                            {age !== null ? `${age} ans · ` : ""}
-                            {child.gender === "M" ? "Garçon" : "Fille"}
+                            {age !== null ? `${age} ${t("adminChildren.age")} · ` : ""}
+                            {child.gender === "M" ? t("adminChildren.boy") : t("adminChildren.girl")}
                           </AppText>
                         </Box>
                       </Box>
@@ -568,14 +588,16 @@ export default function AdminChildren() {
                           <Chip label={cfg.label} size="small"
                             sx={{ bgcolor: cfg.bg, color: cfg.color, fontWeight: 700, height: 20, fontSize: "0.68rem" }} />
                         ) : (
-                          <Chip label="Non analysé" size="small"
+                          <Chip label={t("adminChildren.notAnalyzed")} size="small"
                             sx={{ bgcolor: "#f0f4f8", color: "#94a3b8", fontWeight: 600, height: 20, fontSize: "0.68rem" }} />
                         )}
                         {child.QChatScore !== null && child.QChatScore !== undefined && (
                           <Chip label={`Q-Chat: ${child.QChatScore}/10`} size="small"
-                            sx={{ bgcolor: child.QChatScore >= 3 ? "#FFF8EE" : "#E6F7EE",
+                            sx={{
+                              bgcolor: child.QChatScore >= 3 ? "#FFF8EE" : "#E6F7EE",
                               color: child.QChatScore >= 3 ? "#F5A623" : "#48BB78",
-                              fontWeight: 700, height: 20, fontSize: "0.68rem" }} />
+                              fontWeight: 700, height: 20, fontSize: "0.68rem"
+                            }} />
                         )}
                         {child.confidence && (
                           <Chip label={`${Math.round(child.confidence * 100)}%`} size="small"
@@ -586,7 +608,7 @@ export default function AdminChildren() {
                       {/* Parent info */}
                       {child.userId && (
                         <AppText variant="caption" color="text.disabled" sx={{ display: "block", mb: 2 }}>
-                          Parent : {child.userId.firstName} {child.userId.lastName}
+                          {t("adminChildren.parent")} : {child.userId.firstName} {child.userId.lastName}
                         </AppText>
                       )}
 
@@ -594,19 +616,19 @@ export default function AdminChildren() {
 
                       {/* Actions */}
                       <Box sx={{ display: "flex", gap: 0.8 }}>
-                        <Tooltip title="Voir les détails">
+                        <Tooltip title={t("actions.details")}>
                           <IconButton size="small" onClick={() => setDetailChild(child)}
                             sx={{ bgcolor: "background.blue", color: "primary.main", "&:hover": { bgcolor: "#BEE3F8" } }}>
                             <InfoIcon sx={{ fontSize: 16 }} />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Modifier">
+                        <Tooltip title={t("actions.edit")}>
                           <IconButton size="small" onClick={() => setEditChild(child)}
                             sx={{ bgcolor: "#E6F7EE", color: "#48BB78", "&:hover": { bgcolor: "#C6F6D5" } }}>
                             <EditIcon sx={{ fontSize: 16 }} />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Supprimer">
+                        <Tooltip title={t("actions.delete")}>
                           <IconButton size="small"
                             onClick={() => setDeleteInfo({ id: child._id, name: `${child.firstName} ${child.lastName}` })}
                             sx={{ bgcolor: "#FFF5F5", color: "error.main", "&:hover": { bgcolor: "#FED7D7" } }}>

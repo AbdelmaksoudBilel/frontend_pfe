@@ -36,11 +36,13 @@ import AppText from "../../components/atoms/AppText";
 import AppButton from "../../components/atoms/AppButton";
 import AdminLayout from "./AdminLayout";
 import api from "../../services/api";
+import useTranslation from "../../hooks/useTranslation";
 
 // ─────────────────────────────────────────────────────────────────
 // COMPOSANT — Carte statistique
 // ─────────────────────────────────────────────────────────────────
 function StatCard({ icon, label, value, sub, color = "primary.main", loading }) {
+  const { t, isRTL } = useTranslation();
   return (
     <Card elevation={0} sx={{
       border: "1.5px solid", borderColor: "divider",
@@ -84,6 +86,7 @@ function StatCard({ icon, label, value, sub, color = "primary.main", loading }) 
 // COMPOSANT — Barre de progression avec label
 // ─────────────────────────────────────────────────────────────────
 function ProgressBar({ label, value, max, color = "#3BBDE8" }) {
+  const { t, isRTL } = useTranslation();
   const pct = max > 0 ? Math.round((value / max) * 100) : 0;
   return (
     <Box sx={{ mb: 2 }}>
@@ -111,13 +114,14 @@ const PROFILE_COLORS = {
 };
 
 function ProfileDistribution({ data }) {
+  const { t, isRTL } = useTranslation();
   const total = data?.reduce((s, d) => s + d.count, 0) || 0;
   return (
     <Box>
       {(data || []).map(({ _id, count }) => (
         <ProgressBar
           key={_id || "null"}
-          label={_id || "Non analysé"}
+          label={_id ? t(`wizard.profileLabels.${_id}`) : t("diagnostic.notAnalyzed")}
           value={count}
           max={total}
           color={PROFILE_COLORS[_id] || "#94a3b8"}
@@ -125,7 +129,7 @@ function ProfileDistribution({ data }) {
       ))}
       {!data?.length && (
         <AppText variant="body2" color="text.disabled" sx={{ textAlign: "center", py: 2 }}>
-          Aucune donnée
+          {t("actions.noData")}
         </AppText>
       )}
     </Box>
@@ -136,7 +140,8 @@ function ProfileDistribution({ data }) {
 // COMPOSANT — Messages par jour (mini chart)
 // ─────────────────────────────────────────────────────────────────
 function MiniBarChart({ data }) {
-  if (!data?.length) return <AppText variant="body2" color="text.disabled" sx={{ py: 2, textAlign: "center" }}>Aucune donnée</AppText>;
+  const { t, isRTL } = useTranslation();
+  if (!data?.length) return <AppText variant="body2" color="text.disabled" sx={{ py: 2, textAlign: "center" }}>{t("actions.noData")}</AppText>;
   const max = Math.max(...data.map(d => d.count), 1);
   return (
     <Box sx={{ display: "flex", alignItems: "flex-end", gap: 0.8, height: 80, px: 1 }}>
@@ -168,13 +173,14 @@ export default function AdminDashboard() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const [stats, setStats]     = useState(null);
-  const [users, setUsers]     = useState(null);
+  const [stats, setStats] = useState(null);
+  const [users, setUsers] = useState(null);
   const [children, setChildren] = useState(null);
-  const [convs, setConvs]     = useState(null);
+  const [convs, setConvs] = useState(null);
   const [responses, setResponses] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const { t, isRTL } = useTranslation();
 
   const load = async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
@@ -200,24 +206,26 @@ export default function AdminDashboard() {
   return (
     <AdminLayout>
       {/* ── Header ── */}
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }} dir={isRTL ? "rtl" : "ltr"}>
         <Box>
-          <AppText variant="h3" sx={{ fontWeight: 900 }}>Tableau de bord</AppText>
+          <AppText variant="h3" sx={{ fontWeight: 900 }}>{t("adminDash.title")}</AppText>
           <AppText variant="body2" color="text.secondary">
-            Vue d'ensemble de la plateforme Ma Chance
+            {t("adminDash.subtitle")}
           </AppText>
         </Box>
         <Box sx={{ display: "flex", gap: 1.5 }}>
-          <Tooltip title="Rafraîchir">
+          <Tooltip title={t("actions.refresh")}>
             <IconButton onClick={() => load(true)} disabled={refreshing}
               sx={{ bgcolor: "background.blue", color: "primary.main" }}>
-              <RefreshIcon sx={{ animation: refreshing ? "spin 1s linear infinite" : "none",
-                "@keyframes spin": { "0%": { transform: "rotate(0deg)" }, "100%": { transform: "rotate(360deg)" } } }} />
+              <RefreshIcon sx={{
+                animation: refreshing ? "spin 1s linear infinite" : "none",
+                "@keyframes spin": { "0%": { transform: "rotate(0deg)" }, "100%": { transform: "rotate(360deg)" } }
+              }} />
             </IconButton>
           </Tooltip>
           <AppButton size="small" onClick={() => navigate("/admin/users")} startIcon={<PendingIcon />}
             color="secondary" variant="outlined">
-            Utilisateurs en attente {stats?.pendingUsers > 0 && `(${stats.pendingUsers})`}
+            {t("adminDash.pendingBtn")} {stats?.pendingUsers > 0 && `(${stats.pendingUsers})`}
           </AppButton>
         </Box>
       </Box>
@@ -225,9 +233,9 @@ export default function AdminDashboard() {
       {/* ── Cartes chiffres globaux ── */}
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {[
-          { icon: <PeopleIcon />, label: "Parents inscrits", value: stats?.totalUsers, sub: stats?.pendingUsers > 0 ? `${stats.pendingUsers} en attente` : "Tous approuvés", color: "#3BBDE8" },
-          { icon: <ChildIcon />, label: "Enfants suivis", value: stats?.totalChildren, sub: `${children?.thisWeek || 0} cette semaine`, color: "#F5A623" },
-          { icon: <ChatIcon />, label: "Messages parents", value: stats?.totalMessages, sub: `${stats?.totalConversations || 0} conversations`, color: "#9F7AEA" },
+          { icon: <PeopleIcon />, label: t("adminDash.totalUsers"), value: stats?.totalUsers, sub: stats?.pendingUsers > 0 ? `${stats.pendingUsers} ${t("status.pending")}` : t("status.approved"), color: "#3BBDE8" },
+          { icon: <ChildIcon />, label: t("adminDash.totalChildren"), value: stats?.totalChildren, sub: `${children?.thisWeek || 0} ${t("adminDash.thisWeek")}`, color: "#F5A623" },
+          { icon: <ChatIcon />, label: t("adminDash.totalMessages"), value: stats?.totalMessages, sub: `${stats?.totalConversations || 0} ${t("adminDash.conversations")}`, color: "#9F7AEA" },
           // { icon: <EvalIcon />, label: "Sessions d'évaluation", value: stats?.totalSessions, sub: `${stats?.totalResponses || 0} réponses IA`, color: "#48BB78" },
         ].map((card) => (
           <Grid item xs={6} md={4} key={card.label}>
@@ -244,9 +252,9 @@ export default function AdminDashboard() {
           <Card elevation={0} sx={{ border: "1.5px solid", borderColor: "divider", borderRadius: 3, height: "100%" }}>
             <CardContent sx={{ p: 3 }}>
               <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2.5 }}>
-                <AppText variant="h5" sx={{ fontWeight: 800 }}>Utilisateurs</AppText>
+                <AppText variant="h5" sx={{ fontWeight: 800 }}>{t("adminDash.usersTitle")}</AppText>
                 <AppButton size="small" variant="text" onClick={() => navigate("/admin/users")}>
-                  Voir tout
+                  {t("actions.viewAll")}
                 </AppButton>
               </Box>
 
@@ -255,20 +263,20 @@ export default function AdminDashboard() {
                   <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
                     <Box sx={{ flex: 1, textAlign: "center", p: 1.5, bgcolor: "#E6F7EE", borderRadius: 2 }}>
                       <AppText variant="h4" sx={{ color: "#48BB78", fontWeight: 900 }}>{users?.approved || 0}</AppText>
-                      <AppText variant="caption" color="text.secondary">Approuvés</AppText>
+                      <AppText variant="caption" color="text.secondary">{t("adminDash.approved")}</AppText>
                     </Box>
                     <Box sx={{ flex: 1, textAlign: "center", p: 1.5, bgcolor: "#FFF8EE", borderRadius: 2 }}>
                       <AppText variant="h4" sx={{ color: "#F5A623", fontWeight: 900 }}>{users?.pending || 0}</AppText>
-                      <AppText variant="caption" color="text.secondary">En attente</AppText>
+                      <AppText variant="caption" color="text.secondary">{t("adminDash.waiting")}</AppText>
                     </Box>
                     <Box sx={{ flex: 1, textAlign: "center", p: 1.5, bgcolor: "#FFF5F5", borderRadius: 2 }}>
                       <AppText variant="h4" sx={{ color: "#F56565", fontWeight: 900 }}>{users?.notVerified || 0}</AppText>
-                      <AppText variant="caption" color="text.secondary">Non vérifiés</AppText>
+                      <AppText variant="caption" color="text.secondary">{t("adminDash.notVerified")}</AppText>
                     </Box>
                   </Box>
                   <Divider sx={{ mb: 2 }} />
                   <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <AppText variant="caption" color="text.secondary">Inscrits cette semaine</AppText>
+                    <AppText variant="caption" color="text.secondary">{t("adminDash.inscriptions")}</AppText>
                     <Chip label={`+${users?.lastWeek || 0}`} size="small"
                       sx={{ bgcolor: "background.blue", color: "primary.dark", fontWeight: 700 }} />
                   </Box>
@@ -283,8 +291,8 @@ export default function AdminDashboard() {
           <Card elevation={0} sx={{ border: "1.5px solid", borderColor: "divider", borderRadius: 3, height: "100%" }}>
             <CardContent sx={{ p: 3 }}>
               <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2.5 }}>
-                <AppText variant="h5" sx={{ fontWeight: 800 }}>Profils détectés</AppText>
-                <Chip label={`Conf. ${Math.round((children?.avgConfidence || 0) * 100)}%`}
+                <AppText variant="h5" sx={{ fontWeight: 800 }}>{t("adminDash.profilesTitle")}</AppText>
+                <Chip label={`${t("adminDash.avgConf")} ${Math.round((children?.avgConfidence || 0) * 100)}%`}
                   size="small" sx={{ bgcolor: "background.blue", color: "primary.dark", fontWeight: 700 }} />
               </Box>
               {loading ? <CircularProgress size={24} /> : (
@@ -298,7 +306,7 @@ export default function AdminDashboard() {
         <Grid item xs={12} md={4}>
           <Card elevation={0} sx={{ border: "1.5px solid", borderColor: "divider", borderRadius: 3, height: "100%" }}>
             <CardContent sx={{ p: 3 }}>
-              <AppText variant="h5" sx={{ fontWeight: 800, mb: 2.5 }}>Performance IA</AppText>
+              <AppText variant="h5" sx={{ fontWeight: 800, mb: 2.5 }}>{t("adminDash.aiPerf")}</AppText>
               {loading ? <CircularProgress size={24} /> : (
                 <>
                   <Box sx={{ display: "flex", gap: 1.5, mb: 2.5 }}>
@@ -307,32 +315,32 @@ export default function AdminDashboard() {
                       <AppText variant="h5" sx={{ fontWeight: 900, color: "primary.main" }}>
                         {responses?.avgTotalMs ? `${(responses.avgTotalMs / 1000).toFixed(1)}s` : "—"}
                       </AppText>
-                      <AppText variant="caption" color="text.secondary">Tps moyen</AppText>
+                      <AppText variant="caption" color="text.secondary">{t("adminDash.avgTime")}</AppText>
                     </Box>
                     <Box sx={{ flex: 1, textAlign: "center", p: 1.5, bgcolor: "#E6F7EE", borderRadius: 2 }}>
                       <ThumbUpIcon sx={{ color: "#48BB78", fontSize: 20, mb: 0.5 }} />
                       <AppText variant="h5" sx={{ fontWeight: 900, color: "#48BB78" }}>
                         {responses?.satisfactionPct ? `${responses.satisfactionPct}%` : "—"}
                       </AppText>
-                      <AppText variant="caption" color="text.secondary">Satisfaction</AppText>
+                      <AppText variant="caption" color="text.secondary">{t("adminDash.satisfaction")}</AppText>
                     </Box>
                   </Box>
                   <Divider sx={{ mb: 2 }} />
                   <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                      <AppText variant="caption" color="text.secondary">Score RAG moyen</AppText>
+                      <AppText variant="caption" color="text.secondary">{t("adminDash.ragScore")}</AppText>
                       <AppText variant="caption" sx={{ fontWeight: 700, color: "primary.main" }}>
                         {responses?.avgRagScore || "—"}
                       </AppText>
                     </Box>
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                      <AppText variant="caption" color="text.secondary">Recherche web utilisée</AppText>
+                      <AppText variant="caption" color="text.secondary">{t("adminDash.webUsed")}</AppText>
                       <AppText variant="caption" sx={{ fontWeight: 700, color: "secondary.main" }}>
                         {responses?.webUsed || 0} fois
                       </AppText>
                     </Box>
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                      <AppText variant="caption" color="text.secondary">Feedbacks reçus</AppText>
+                      <AppText variant="caption" color="text.secondary">{t("adminDash.feedbacks")}</AppText>
                       <AppText variant="caption" sx={{ fontWeight: 700 }}>
                         {(responses?.helpful || 0) + (responses?.notHelpful || 0)} / {responses?.total || 0}
                       </AppText>
@@ -351,8 +359,8 @@ export default function AdminDashboard() {
           <Card elevation={0} sx={{ border: "1.5px solid", borderColor: "divider", borderRadius: 3 }}>
             <CardContent sx={{ p: 3 }}>
               <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
-                <AppText variant="h5" sx={{ fontWeight: 800 }}>Messages parents — 14 derniers jours</AppText>
-                <Chip label={`${convs?.avgMessagesPerConv || 0} msg/conv`} size="small"
+                <AppText variant="h5" sx={{ fontWeight: 800 }}>{t("adminDash.msgChart")}</AppText>
+                <Chip label={`${convs?.avgMessagesPerConv || 0} ${t("adminDash.msgPerConv")}`} size="small"
                   sx={{ bgcolor: "background.blue", color: "primary.dark", fontWeight: 700 }} />
               </Box>
               {loading ? <CircularProgress size={24} /> : (
@@ -365,12 +373,12 @@ export default function AdminDashboard() {
         <Grid item xs={12} md={5}>
           <Card elevation={0} sx={{ border: "1.5px solid", borderColor: "divider", borderRadius: 3, height: "100%" }}>
             <CardContent sx={{ p: 3 }}>
-              <AppText variant="h5" sx={{ fontWeight: 800, mb: 2.5 }}>Actions rapides</AppText>
+              <AppText variant="h5" sx={{ fontWeight: 800, mb: 2.5 }}>{t("adminDash.quickActions")}</AppText>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
                 {[
-                  { label: "Gérer les utilisateurs", sub: `${users?.pending || 0} en attente d'approbation`, color: "primary", onClick: () => navigate("/admin/users"), icon: <PeopleIcon fontSize="small" /> },
-                  { label: "Gérer les enfants", sub: `${stats?.totalSessions || 0} sessions enregistrées`, color: "secondary", onClick: () => navigate("/admin/children"), icon: <ChildIcon fontSize="small" /> },
-                  { label: "Analyse NLP", sub: "Messages parents analysés", color: "primary", onClick: () => navigate("/admin/nlp"), icon: <BrainIcon fontSize="small" /> },
+                  { label: t("adminDash.manageUsers"), sub: `${users?.pending || 0} ${t("status.pending")}`, color: "primary", onClick: () => navigate("/admin/users"), icon: <PeopleIcon fontSize="small" /> },
+                  { label: t("adminDash.manageChildren"), sub: `${stats?.totalChildren || 0} ${t("adminDash.totalChildren")}`, color: "secondary", onClick: () => navigate("/admin/children"), icon: <ChildIcon fontSize="small" /> },
+                  { label: t("adminDash.nlpAnalysis"), sub: `${stats?.totalMessages || 0} ${t("adminDash.msgsAnalyzed")}`, color: "primary", onClick: () => navigate("/admin/nlp"), icon: <BrainIcon fontSize="small" /> },
                 ].map((action) => (
                   <Box key={action.label}
                     onClick={action.onClick}
