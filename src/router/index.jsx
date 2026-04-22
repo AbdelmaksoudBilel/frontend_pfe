@@ -14,7 +14,7 @@ import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
 import ChildWizardPage from "../pages/ChildWizardPage";
 import ChatPage from "../pages/ChatPage";
-import ProfilePage from "../pages/Profilepage";
+import ProfilePage from "../pages/ProfilePage";
 
 // ── Pages Admin ──────────────────────────────────────────────────
 import AdminDashboard from "../pages/admin/AdminDashboard";
