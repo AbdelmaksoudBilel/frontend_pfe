@@ -136,7 +136,7 @@ function ChildDetailsDialog({ child, open, onClose }) {
           <Tab label={t("adminChildren.profileML")} />
           <Tab label={t("adminChildren.qchatTab")} />
           <Tab label={t("adminChildren.dsSurveyTab")} />
-          <Tab label={t("adminChildren.aiProfileTab")} />
+          {/* <Tab label={t("adminChildren.aiProfileTab")} /> */}
         </Tabs>
       </DialogTitle>
       <Divider />
@@ -278,7 +278,7 @@ function ChildDetailsDialog({ child, open, onClose }) {
         )}
 
         {/* Onglet 4 : Profil IA */}
-        {tab === 3 && (
+        {/* {tab === 3 && (
           <Box sx={{ py: 2 }}>
             {child.profileDetected?.length > 0 ? (
               <>
@@ -300,7 +300,7 @@ function ChildDetailsDialog({ child, open, onClose }) {
               </Box>
             )}
           </Box>
-        )}
+        )} */}
       </DialogContent>
       <Divider />
       <DialogActions sx={{ px: 3, py: 2 }}>

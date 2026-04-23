@@ -7,10 +7,10 @@ import ContactCard   from "../molecules/ContactCard";
 import logo from "../../assets/mini_logo.png";
 
 const CONTACTS = [
-  { icon:"📍", label:"Adresse",   value:"Centre Ma Chance\nTunis, Tunisie", color:"primary.main"   },
-  { icon:"📞", label:"Téléphone", value:"+216 XX XXX XXX",                  color:"secondary.main" },
-  { icon:"✉️",  label:"Email",    value:"contact@machance.tn",               color:"primary.main"   },
-  { icon:"🕐", label:"Horaires",  value:"Lun–Sam\n8h00 – 18h00",            color:"secondary.main" },
+  { icon:"📍", label:"Adresse",   value:"Centre Ma Chance\nTunis, Sfax", color:"primary.main"   },
+  { icon:"📞", label:"Téléphone", value:"+216 58 662 000",                  color:"secondary.main" },
+  { icon:"✉️",  label:"Email",    value:"machance2019@yahoo.com",               color:"primary.main"   },
+  { icon:"🕐", label:"Horaires",  value:"LUN – VEN  (SAM)\n7h30 – 17h00   (7h30–13h00)",            color:"secondary.main" },
 ];
 
 export default function ContactSection() {

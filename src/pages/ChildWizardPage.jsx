@@ -191,11 +191,10 @@ export default function ChildWizardPage() {
 
   // Variables comportementales supplémentaires
   const [behav, setBehav] = useState({
-    jaundice:0, familyMemWithASD:0, whoCompletedTest:0,
-    socialResponsivenessScale:0,
-    speechDelayDisorder:0, learningDisorder:0, geneticDisorders:0,
-    depression:0, globalDevelopmentalDelay:0, socialBehaviouralIssues:0,
-    anxietyDisorder:0, childhoodAutismRatingScale:0,
+    jaundice: null, familyMemWithASD: null, whoCompletedTest: null,
+    speechDelayDisorder: null, learningDisorder: null, geneticDisorders: null,
+    depression: null, globalDevelopmentalDelay: null, socialBehaviouralIssues: null,
+    anxietyDisorder: null,
   });
 
   // DS Survey RM — PR_QN1_A EXCLU (injecté automatiquement par Python)
@@ -281,9 +280,34 @@ export default function ChildWizardPage() {
       // Variables comportementales
       Object.entries(behav).forEach(([k, v]) => fd.append(k, v));
 
-      // DS Survey (1-based, PR_QN1_A absent → Python l'injectera)
-      Object.entries(ds).forEach(([k, v]) => fd.append(k, (v ?? 0) + 1));
-      // PR_QN1_A = 0 par défaut (sera remplacé par Python via triggerPrediction)
+      // DS Survey — ENCODAGE DIFFÉRENT selon le champ MongoDB :
+      //
+      // Groupe A — min:1 dans MongoDB → RadioGroup 0-based → envoyer v+1
+      //   PR_AGE1, PR_Q3D, PR_QF1A, PR_QG1A, PR_QH1A, PR_QH1B,
+      //   PR_QI1, PR_QJ1, PR_QK1, PR_QQ, PR_QO1_*_COMBINE
+      //
+      // Groupe B — min:0 dans MongoDB → RadioGroup 0-based → envoyer v tel quel (NO +1)
+      //   PR_QN1_B, PR_QN1_C, PR_QN1_D, PR_QN1_E, PR_QN1_F, PR_QN1_G, PR_QN1_H
+      //   (schema: { min: 0, max: 2 } où 0=Non, 1=Oui non-diag, 2=Oui diag)
+
+      // Champs 0-indexed (min:0 dans MongoDB) — NE PAS ajouter +1
+      const DS_ZERO_INDEXED = new Set([
+        "PR_QN1_B","PR_QN1_C","PR_QN1_D","PR_QN1_E",
+        "PR_QN1_F","PR_QN1_G","PR_QN1_H",
+      ]);
+
+      Object.entries(ds).forEach(([k, v]) => {
+        if (DS_ZERO_INDEXED.has(k)) {
+          // Groupe B : valeur brute (0, 1 ou 2)
+          fd.append(k, v ?? 0);
+        } else {
+          // Groupe A : valeur + 1 (RadioGroup 0-based → MongoDB 1-based)
+          fd.append(k, (v ?? 0) + 1);
+        }
+      });
+
+      // PR_QN1_A = 0 par défaut (sera remplacé automatiquement par Python
+      // après calcul TSA : tsa_detected → 2, sinon → 0)
       fd.append("PR_QN1_A", 0);
 
       const childRes = await api.post("/children", fd, { headers:{ "Content-Type":"multipart/form-data" } });
@@ -471,17 +495,6 @@ export default function ChildWizardPage() {
                 onChange={v => setBehav(b=>({...b,whoCompletedTest:v}))}
                 opts={[0,1,2,3,4].map(i => t(`wizard.behav.whoOpts.${i}`))} />
 
-              {/* socialResponsivenessScale */}
-              <Box sx={{ mb:2.5, pb:2.5, borderBottom:"1px solid", borderColor:"divider" }}>
-                <AppText variant="caption" sx={{ fontWeight:600, color:"text.primary", display:"block", mb:1, lineHeight:1.6 }}>
-                  {t("wizard.behav.srs")}
-                </AppText>
-                <TextField type="number" size="small" inputProps={{ min:0, max:200 }}
-                  value={behav.socialResponsivenessScale || ""}
-                  onChange={e => setBehav(b=>({...b, socialResponsivenessScale: Number(e.target.value)}))}
-                  sx={{ width:160 }} />
-              </Box>
-
               {/* speechDelayDisorder */}
               <RadioBlock label={t("wizard.behav.speechDelay")} value={behav.speechDelayDisorder}
                 onChange={v => setBehav(b=>({...b,speechDelayDisorder:v}))}
@@ -516,17 +529,6 @@ export default function ChildWizardPage() {
               <RadioBlock label={t("wizard.behav.anxiety")} value={behav.anxietyDisorder}
                 onChange={v => setBehav(b=>({...b,anxietyDisorder:v}))}
                 opts={[t("wizard.behav.optNo"), t("wizard.behav.optYes")]} row />
-
-              {/* childhoodAutismRatingScale */}
-              <Box sx={{ mb:2.5 }}>
-                <AppText variant="caption" sx={{ fontWeight:600, color:"text.primary", display:"block", mb:1, lineHeight:1.6 }}>
-                  {t("wizard.behav.cars")}
-                </AppText>
-                <TextField type="number" size="small" inputProps={{ min:0, max:60 }}
-                  value={behav.childhoodAutismRatingScale || ""}
-                  onChange={e => setBehav(b=>({...b, childhoodAutismRatingScale: Number(e.target.value)}))}
-                  sx={{ width:160 }} />
-              </Box>
             </Box>
           )}
 

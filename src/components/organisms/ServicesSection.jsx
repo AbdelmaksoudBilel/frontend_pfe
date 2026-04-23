@@ -6,7 +6,7 @@ import FeatureCard  from "../molecules/FeatureCard";
 const FEATURES = [
   { icon:"🧠", title:"Assistant IA",       desc:"Conseils basés sur DSM-5, TEACCH et PECS selon le profil de votre enfant.", accent:"primary.main",   bg:"background.blue"   },
   { icon:"🎯", title:"Profil Q-Chat-10",   desc:"Formulaire de dépistage TSA pour adapter les recommandations.",             accent:"primary.main",   bg:"background.blue"   },
-  { icon:"📊", title:"Suivi & Évaluation", desc:"14 domaines, 188 questions cliniques avec courbes de progression.",         accent:"primary.main",   bg:"background.blue"   },
+  { icon:"📊", title:"Suivi & Évaluation", desc:"2 domaines, 37 questions cliniques et détection de profile.",         accent:"primary.main",   bg:"background.blue"   },
   { icon:"💬", title:"Multilingue",        desc:"Réponses en arabe, français et anglais selon votre préférence.",            accent:"secondary.main", bg:"background.orange" },
   { icon:"🔒", title:"Données sécurisées", desc:"Accès validé par l'équipe. Authentification JWT sécurisée.",               accent:"secondary.main", bg:"background.orange" },
   { icon:"🌍", title:"Disponible 24h/24",  desc:"Posez vos questions à tout moment, depuis n'importe quel appareil.",       accent:"secondary.main", bg:"background.orange" },

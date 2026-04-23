@@ -45,7 +45,7 @@ export default function HeroSection({ onStart, onLearnMore }) {
             </Box>
 
             <Box sx={{ display: "flex", gap: { xs: 2.5, md: 4 }, pt: 3, borderTop: "1px solid", borderColor: "divider", flexWrap: "wrap" }}>
-              {[["14","Domaines"],["188","Questions"],["24/7","Disponible"],["3","Langues"]].map(([v,l]) => (
+              {[["2","Domaines"],["37","Questions"],["24/7","Disponible"],["3","Langues"]].map(([v,l]) => (
                 <StatItem key={l} value={v} label={l} color="primary.main" />
               ))}
             </Box>
