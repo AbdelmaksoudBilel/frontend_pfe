@@ -27,7 +27,7 @@ import mini_logo from "../assets/mini_logo.png";
 const FEATURES = [
   { icon: "🧠", label: "Conseils basés sur DSM-5, TEACCH & PECS" },
   { icon: "🎯", label: "Profil personnalisé pour votre enfant" },
-  { icon: "📊", label: "Suivi sur 14 domaines cliniques" },
+  { icon: "📊", label: "2 domaines, 37 questions cliniques" },
   { icon: "💬", label: "Disponible en arabe, français et anglais" },
 ];
 
