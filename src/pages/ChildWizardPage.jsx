@@ -297,18 +297,13 @@ export default function ChildWizardPage() {
       ]);
 
       Object.entries(ds).forEach(([k, v]) => {
-        if (DS_ZERO_INDEXED.has(k)) {
-          // Groupe B : valeur brute (0, 1 ou 2)
-          fd.append(k, v ?? 0);
-        } else {
           // Groupe A : valeur + 1 (RadioGroup 0-based → MongoDB 1-based)
           fd.append(k, (v ?? 0) + 1);
-        }
       });
 
       // PR_QN1_A = 0 par défaut (sera remplacé automatiquement par Python
       // après calcul TSA : tsa_detected → 2, sinon → 0)
-      fd.append("PR_QN1_A", 0);
+      fd.append("PR_QN1_A", 1);
 
       const childRes = await api.post("/children", fd, { headers:{ "Content-Type":"multipart/form-data" } });
       const childId  = childRes.data._id || childRes.data.id;
