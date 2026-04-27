@@ -101,7 +101,7 @@ export default function VerifyEmailPage() {
               <CheckCircleOutlineIcon sx={{ fontSize: 44, color: "success.main" }} />
             </Box>
 
-            <AppText variant="h3" gutterBottom>Email confirmé ✅</AppText>
+            <AppText variant="h3" gutterBottom>Email confirmé</AppText>
             <AppText variant="body2" color="text.secondary" sx={{ mb: 3.5, lineHeight: 1.8 }}>
               {message}
             </AppText>

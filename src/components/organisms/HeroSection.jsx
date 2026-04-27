@@ -6,6 +6,9 @@ import StatItem       from "../molecules/StatItem";
 import ChatBubble     from "../molecules/ChatBubble";
 import FloatingBadge  from "../molecules/FloatingBadge";
 import logo from "../../assets/mini_logo.png";
+import TrackChangesIcon from '@mui/icons-material/TrackChanges';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+
 export default function HeroSection({ onStart, onLearnMore }) {
   return (
     <Box id="accueil" sx={{
@@ -89,12 +92,12 @@ export default function HeroSection({ onStart, onLearnMore }) {
 
               {/* Badge profil */}
               <Box sx={{ position: "absolute", bottom: { xs: 90, md: 100 }, right: { xs: "-2%", md: "-5%" }, zIndex: 2 }}>
-                <FloatingBadge icon="🎯" title="Profil estimé"  subtitle="TSA · Niveau modéré" color="secondary.main" animName="floatB" />
+                <FloatingBadge icon={<TrackChangesIcon color="primary"/>} title="Profil estimé"  subtitle="TSA · Niveau modéré" color="secondary.main" animName="floatB" />
               </Box>
 
               {/* Badge progression */}
               <Box sx={{ position: "absolute", bottom: { xs: 10, md: 20 }, left: "2%", zIndex: 2 }}>
-                <FloatingBadge icon="📈" title="Progression" subtitle="+12% ce mois ↑" color="primary.main" animName="float" />
+                <FloatingBadge icon={<QueryStatsIcon color="secondary"/>} title="Progression" subtitle="+12% ce mois ↑" color="primary.main" animName="float" />
               </Box>
             </Box>
           </Grid>

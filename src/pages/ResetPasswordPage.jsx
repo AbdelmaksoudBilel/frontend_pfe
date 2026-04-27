@@ -93,7 +93,7 @@ export default function ResetPasswordPage() {
           }}>
             <CheckCircleIcon sx={{ fontSize: 44, color: "success.main" }} />
           </Box>
-          <AppText variant="h3" gutterBottom>Mot de passe modifié ✅</AppText>
+          <AppText variant="h3" gutterBottom>Mot de passe modifié</AppText>
           <AppText variant="body2" color="text.secondary" sx={{ mb: 4, lineHeight: 1.8 }}>
             Votre mot de passe a été réinitialisé avec succès.
             Vous pouvez maintenant vous connecter.

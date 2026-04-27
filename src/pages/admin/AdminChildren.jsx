@@ -310,6 +310,9 @@ function ChildDetailsDialog({ child, open, onClose }) {
   );
 }
 
+import FaceIcon from '@mui/icons-material/Face';
+import Face2Icon from '@mui/icons-material/Face2';
+
 // ─────────────────────────────────────────────────────────────────
 // DIALOG — Modifier enfant
 // ─────────────────────────────────────────────────────────────────
@@ -367,8 +370,8 @@ function EditChildDialog({ child, open, onClose, onSaved }) {
           <Grid item xs={12} sm={5}>
             <TextField fullWidth select label={t("wizard.gender")} value={form.gender || ""}
               onChange={e => setForm(f => ({ ...f, gender: e.target.value }))}>
-              <MenuItem value="M">👦 {t("wizard.boy")}</MenuItem>
-              <MenuItem value="F">👧 {t("wizard.girl")}</MenuItem>
+              <MenuItem value="M"><FaceIcon sx={{ mr: 1 }} /> {t("wizard.boy")}</MenuItem>
+              <MenuItem value="F"><Face2Icon sx={{ mr: 1 }} /> {t("wizard.girl")}</MenuItem>
             </TextField>
           </Grid>
         </Grid>

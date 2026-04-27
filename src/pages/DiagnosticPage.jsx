@@ -35,15 +35,19 @@ import AppText from "../components/atoms/AppText";
 import AppButton from "../components/atoms/AppButton";
 import { useTranslation } from "../hooks/useTranslation";
 import api from "../services/api";
+import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
+import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
+import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 
 const BASE_URL = import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:3001";
 
 // ── Profil config ─────────────────────────────────────────────────────────────
 const PROFILE_CFG = {
-  TSA   : { color: "#3BBDE8", bg: "#EBF7FE", icon: "🧠" },
-  RM    : { color: "#F5A623", bg: "#FFF8EE", icon: "📚" },
-  MIXTE : { color: "#9F7AEA", bg: "#F3F0FF", icon: "🔀" },
-  Normal: { color: "#48BB78", bg: "#E6F7EE", icon: "✅" },
+  TSA   : { color: "#3BBDE8", bg: "#EBF7FE", icon: <ExtensionOutlinedIcon  sx={{ color: "#3BBDE8", fontSize: 100 }} /> },
+  RM    : { color: "#F5A623", bg: "#FFF8EE", icon: <LibraryBooksOutlinedIcon sx={{ color: "#F5A623", fontSize: 100 }} /> },
+  MIXTE : { color: "#9F7AEA", bg: "#F3F0FF", icon: <PeopleOutlinedIcon sx={{ color: "#9F7AEA", fontSize: 100 }} /> },
+  Normal: { color: "#48BB78", bg: "#E6F7EE", icon: <CheckCircleOutlinedIcon sx={{ color: "#48BB78", fontSize: 100 }} /> },
 };
 
 // ── Q-Chat questions labels ────────────────────────────────────────────────────

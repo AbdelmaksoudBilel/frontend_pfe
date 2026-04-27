@@ -8,14 +8,18 @@ import MarkEmailReadOutlinedIcon from "@mui/icons-material/MarkEmailReadOutlined
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 import AppButton from "../components/atoms/AppButton";
-import AppText   from "../components/atoms/AppText";
+import AppText from "../components/atoms/AppText";
 
 import logo from "../assets/logo.png";
 
+import EmailIcon from '@mui/icons-material/Email';
+import HourglassTopOutlinedIcon from '@mui/icons-material/HourglassTopOutlined';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+
 const STEPS = [
-  { icon: "✉️",  title: "Vérifiez votre email",       desc: "Cliquez sur le lien envoyé à votre adresse." },
-  { icon: "⏳",  title: "Validation par l'équipe",    desc: "Notre équipe activera votre compte sous 24h." },
-  { icon: "🌱",  title: "Accédez à l'assistant",      desc: "Ajoutez le profil de votre enfant et commencez." },
+  { icon: <EmailIcon color="primary" sx={{ fontSize: 30, mb: -1 }} />, title: "Vérifiez votre email", desc: "Cliquez sur le lien envoyé à votre adresse." },
+  { icon: <HourglassTopOutlinedIcon color="primary" sx={{ fontSize: 30, mb: -1 }} />, title: "Validation par l'équipe", desc: "Notre équipe activera votre compte sous 24h." },
+  { icon: <QuestionAnswerIcon color="primary" sx={{ fontSize: 30, mb: -3 }} />, title: "Contactez notre équipe", desc: "N'hésitez pas à nous contacter si vous avez des questions." },
 ];
 
 export default function EmailSentPage() {
@@ -41,7 +45,7 @@ export default function EmailSentPage() {
           <Box sx={{
             width: 52, height: 52, mx: "auto", mb: 1.5,
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 24, 
+            fontSize: 24,
           }}>
             <img width={150} src={logo} alt="Logo" srcset="" />
           </Box>
@@ -55,7 +59,7 @@ export default function EmailSentPage() {
           animation: "pulse 2.5s ease-in-out infinite",
           "@keyframes pulse": {
             "0%,100%": { boxShadow: "0 0 0 0 rgba(59,189,232,0.3)" },
-            "50%":     { boxShadow: "0 0 0 20px rgba(59,189,232,0)" },
+            "50%": { boxShadow: "0 0 0 20px rgba(59,189,232,0)" },
           },
         }}>
           <MarkEmailReadOutlinedIcon sx={{ fontSize: 44, color: "primary.main" }} />
@@ -78,16 +82,20 @@ export default function EmailSentPage() {
             }}>
               <Box sx={{ fontSize: 22, flexShrink: 0, mt: 0.2 }}>{icon}</Box>
               <Box>
-                <AppText variant="body2" sx={{ fontWeight: 700, color: "text.primary",
-                  lineHeight: 1.3, mb: 0.3 }}>
+                <AppText variant="body2" sx={{
+                  fontWeight: 700, color: "text.primary",
+                  lineHeight: 1.3, mb: 0.3
+                }}>
                   {title}
                 </AppText>
                 <AppText variant="caption" color="text.secondary">{desc}</AppText>
               </Box>
               {i === 0 && (
-                <Box sx={{ ml:"auto", px:1.5, py:0.5, bgcolor:"primary.main",
-                  borderRadius:2, flexShrink:0 }}>
-                  <AppText variant="caption" sx={{ color:"white", fontWeight:700 }}>
+                <Box sx={{
+                  ml: "auto", px: 1.5, py: 0.5, bgcolor: "primary.main",
+                  borderRadius: 2, flexShrink: 0
+                }}>
+                  <AppText variant="caption" sx={{ color: "white", fontWeight: 700 }}>
                     À faire
                   </AppText>
                 </Box>
@@ -97,11 +105,15 @@ export default function EmailSentPage() {
         </Box>
 
         {/* Note approbation */}
-        <Box sx={{ bgcolor: "background.orange", borderRadius: 3, p: 2.5, mb: 4,
-          border: "1px solid", borderColor: "secondary.light", textAlign: "left" }}>
-          <AppText variant="caption" sx={{ color: "secondary.dark", fontWeight: 800,
-            display: "block", mb: 0.6 }}>
-            ⏳ Validation manuelle requise
+        <Box sx={{
+          bgcolor: "background.orange", borderRadius: 3, p: 2.5, mb: 4,
+          border: "1px solid", borderColor: "secondary.light", textAlign: "left"
+        }}>
+          <AppText variant="caption" sx={{
+            color: "secondary.dark", fontWeight: 800,
+            display: "block", mb: 0.6
+          }}>
+            <HourglassTopOutlinedIcon sx={{ fontSize: 18, mb: -0.5 }} /> Validation manuelle requise
           </AppText>
           <AppText variant="caption" sx={{ color: "text.secondary", lineHeight: 1.7 }}>
             Après vérification de votre email, notre équipe validera votre accès

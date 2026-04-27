@@ -24,11 +24,16 @@ import { useAuth } from "../hooks/useAuth";
 import logo from "../assets/logo.png";
 import mini_logo from "../assets/mini_logo.png";
 
+import BarChartIcon from '@mui/icons-material/BarChart';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import AssistantIcon from '@mui/icons-material/Assistant';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+
 const FEATURES = [
-  { icon: "🧠", label: "Conseils basés sur DSM-5, TEACCH & PECS" },
-  { icon: "🎯", label: "Profil personnalisé pour votre enfant" },
-  { icon: "📊", label: "2 domaines, 37 questions cliniques" },
-  { icon: "💬", label: "Disponible en arabe, français et anglais" },
+  { icon: <AssistantIcon color="secondary" sx={{ mb: -0.5 }} />, label: "Conseils basés sur DSM-5, TEACCH & PECS" },
+  { icon: <BarChartIcon color="secondary" sx={{ mb: -0.5 }} />, label: "Profil personnalisé pour votre enfant" },
+  { icon: <QueryStatsIcon color="secondary" sx={{ mb: -0.5 }} />, label: "2 domaines, 37 questions cliniques" },
+  { icon: <QuestionAnswerIcon color="secondary" sx={{ mb: -0.5 }} />, label: "Disponible en arabe, français et anglais" },
 ];
 
 export default function LoginPage() {
@@ -111,7 +116,7 @@ export default function LoginPage() {
         </Box>
 
         <Box sx={{ width: "100%", maxWidth: 400 }}>
-          <AppText variant="h3" sx={{ mb: 0.8 }}>Bon retour 👋</AppText>
+          <AppText variant="h3" sx={{ mb: 0.8 }}>Bon retour</AppText>
           <AppText variant="body2" color="text.secondary" sx={{ mb: 3.5 }}>
             Connectez-vous pour accéder à votre espace parent.
           </AppText>
@@ -253,7 +258,7 @@ export default function LoginPage() {
           </Box>
           <Box sx={{ display:"flex", gap:4, justifyContent:"center", mt:4,
             pt:3, borderTop:"1px solid rgba(255,255,255,0.2)" }}>
-            {[["14","Domaines"],["188","Questions"],["24/7","Disponible"]].map(([v,l])=>(
+            {[["2","Domaines"],["37","Questions"],["24/7","Disponible"]].map(([v,l])=>(
               <Box key={l} sx={{ textAlign:"center" }}>
                 <AppText variant="h3" sx={{ color:"white", fontWeight:900, lineHeight:1 }}>{v}</AppText>
                 <AppText variant="caption" sx={{ color:"rgba(255,255,255,0.65)", display:"block" }}>{l}</AppText>

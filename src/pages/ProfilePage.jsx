@@ -27,13 +27,20 @@ import { useTranslation } from "../hooks/useTranslation";
 import api from "../services/api";
 import { useDispatch } from "react-redux";
 
+import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
+import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
+import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import FaceIcon from '@mui/icons-material/Face';
+import Face2Icon from '@mui/icons-material/Face2';
+
 const BASE_URL = import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:3001";
 
 const PROFILE_CFG = {
-  TSA: { color: "#3BBDE8", label: "TSA", icon: "🧠" },
-  RM: { color: "#F5A623", label: "DI", icon: "📚" },
-  MIXTE: { color: "#9F7AEA", label: "Mixte", icon: "🔀" },
-  Normal: { color: "#48BB78", label: "Normal", icon: "✅" },
+  TSA: { color: "#3BBDE8", label: "TSA", icon: <ExtensionOutlinedIcon sx={{ color: "#3BBDE8" }} /> },
+  RM: { color: "#F5A623", label: "DI", icon: <LibraryBooksOutlinedIcon sx={{ color: "#F5A623" }} /> },
+  MIXTE: { color: "#9F7AEA", label: "Mixte", icon: <PeopleOutlinedIcon sx={{ color: "#9F7AEA" }} /> },
+  Normal: { color: "#48BB78", label: "Normal", icon: <CheckCircleOutlinedIcon sx={{ color: "#48BB78" }} /> },
 };
 
 // ── Tab 1 : Informations ──────────────────────────────────────────────────────
@@ -184,8 +191,8 @@ function EditChildDialog({ child, open, onClose, onSaved, t }) {
           <Grid item xs={12} sm={7}><TextField fullWidth label={t("wizard.birthDate")} type="date" value={form.birthDate || ""} onChange={e => setForm(f => ({ ...f, birthDate: e.target.value }))} InputLabelProps={{ shrink: true }} /></Grid>
           <Grid item xs={12} sm={5}>
             <TextField fullWidth select label={t("wizard.gender")} value={form.gender || ""} onChange={e => setForm(f => ({ ...f, gender: e.target.value }))}>
-              <MenuItem value="M">👦 {t("profile.boy")}</MenuItem>
-              <MenuItem value="F">👧 {t("profile.girl")}</MenuItem>
+              <MenuItem value="M"><FaceIcon sx={{ mr: 1 }} /> {t("profile.boy")}</MenuItem>
+              <MenuItem value="F"><Face2Icon sx={{ mr: 1 }} /> {t("profile.girl")}</MenuItem>
             </TextField>
           </Grid>
         </Grid>
@@ -254,7 +261,7 @@ function TabChildren({ navigate, t }) {
                     </Box>
                     {cfg ? (
                       <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                        <Chip label={`${cfg.icon} ${cfg.label}`} size="small" sx={{ bgcolor: cfg.color + "20", color: cfg.color, fontWeight: 700, fontSize: "0.75rem" }} />
+                        <Chip label={`${cfg.label}`} size="small" sx={{ bgcolor: cfg.color + "20", color: cfg.color, fontWeight: 700, fontSize: "0.75rem" }} />
                         {child.confidence && <AppText variant="caption" color="text.disabled">{t("profile.confidence") || "Conf."} : {Math.round(child.confidence * 100)}%</AppText>}
                       </Box>
                     ) : (

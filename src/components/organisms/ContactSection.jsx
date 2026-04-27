@@ -5,12 +5,16 @@ import AppButton   from "../atoms/AppButton";
 import SectionLabel  from "../atoms/SectionLabel";
 import ContactCard   from "../molecules/ContactCard";
 import logo from "../../assets/mini_logo.png";
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+import EmailIcon from '@mui/icons-material/Email';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import PlaceIcon from '@mui/icons-material/Place';
 
 const CONTACTS = [
-  { icon:"📍", label:"Adresse",   value:"Centre Ma Chance\nTunis, Sfax", color:"primary.main"   },
-  { icon:"📞", label:"Téléphone", value:"+216 58 662 000",                  color:"secondary.main" },
-  { icon:"✉️",  label:"Email",    value:"machance2019@yahoo.com",               color:"primary.main"   },
-  { icon:"🕐", label:"Horaires",  value:"LUN – VEN  (SAM)\n7h30 – 17h00   (7h30–13h00)",            color:"secondary.main" },
+  { icon: <PlaceIcon color="primary" />, label: "Adresse", value: "Centre Ma Chance\nTunis, Sfax", color: "primary.main" },
+  { icon: <LocalPhoneIcon color="secondary" />, label: "Téléphone", value: "+216 58 662 000", color: "secondary.main" },
+  { icon: <EmailIcon color="primary" />, label: "Email", value: "machance2019@yahoo.com", color: "primary.main" },
+  { icon: <AccessTimeFilledIcon color="secondary" />, label: "Horaires", value: "LUN – VEN  (SAM)\n7h30 – 17h00   (7h30–13h00)", color: "secondary.main" },
 ];
 
 export default function ContactSection() {

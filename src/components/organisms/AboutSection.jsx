@@ -1,8 +1,12 @@
 import { Box, Container, Grid, Card, CardContent } from "@mui/material";
-import AppText    from "../atoms/AppText";
-import AppButton  from "../atoms/AppButton";
+import AppText from "../atoms/AppText";
+import AppButton from "../atoms/AppButton";
 import SectionLabel from "../atoms/SectionLabel";
 import logo from "../../assets/logo.png";
+import LocalPharmacyIcon from '@mui/icons-material/LocalPharmacy';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import HandshakeIcon from '@mui/icons-material/Handshake';
+import LanguageIcon from '@mui/icons-material/Language';
 
 export default function AboutSection() {
   return (
@@ -17,7 +21,7 @@ export default function AboutSection() {
                 <Box sx={{ width: "100%", height: 110, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 0.5, mb: 3 }}>
                   <img width={250} src={logo} alt="Logo" srcset="" />
                 </Box>
-                {[["🏥","Suivi pluridisciplinaire"],["📚","Méthodes : DSM-5, TEACCH, PECS"],["🤝","Accompagnement familial"],["🌐","Arabe · Français · Anglais"]].map(([ic,t]) => (
+                {[[<LocalPharmacyIcon color="primary" sx={{ mb: -0.5 }} />, "Suivi pluridisciplinaire"], [<LibraryBooksIcon color="secondary" sx={{ mb: -0.5 }} />, "Méthodes : DSM-5, TEACCH, PECS"], [<HandshakeIcon color="primary" sx={{ mb: -0.5 }} />, "Accompagnement familial"], [<LanguageIcon color="secondary" sx={{ mb: -0.5 }} />, "Arabe · Français · Anglais"]].map(([ic, t]) => (
                   <Box key={t} sx={{ display: "flex", alignItems: "center", gap: 1.5, bgcolor: "background.subtle", borderRadius: 2, p: 1.5, mb: 1.2, border: "1px solid", borderColor: "divider" }}>
                     <span style={{ fontSize: 18 }}>{ic}</span>
                     <AppText variant="body2" sx={{ fontWeight: 700, color: "text.primary" }}>{t}</AppText>
