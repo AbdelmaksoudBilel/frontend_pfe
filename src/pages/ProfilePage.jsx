@@ -247,7 +247,7 @@ function TabChildren({ navigate, t }) {
                   <CardContent sx={{ pb: 1 }}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
                       {child.facePhotoUrl
-                        ? <Avatar src={`${BASE_URL}${child.facePhotoUrl}`} sx={{ width: 56, height: 56, border: "2px solid", borderColor: "primary.main" }} />
+                        ? <Avatar src={`${child.facePhotoUrl}`} sx={{ width: 56, height: 56, border: "2px solid", borderColor: "primary.main" }} />
                         : <Avatar sx={{ width: 56, height: 56, bgcolor: "background.blue", color: "primary.main", fontSize: 22, fontWeight: 800 }}>{child.firstName?.[0]}</Avatar>
                       }
                       <Box sx={{ flex: 1, minWidth: 0 }}>

@@ -264,7 +264,7 @@ export default function ChildWizardPage() {
 
   const validateStep3 = () => {
     const e = {};
-    const required = ["PR_AGE1", "PR_Q3D", "PR_QF1A", "PR_QG1A", "PR_QH1A", "PR_QH1B",
+    const required = ["PR_QF1A", "PR_QG1A", "PR_QH1A", "PR_QH1B",
       "PR_QI1", "PR_QJ1", "PR_QK1", "PR_QQ",
       "PR_QN1_B", "PR_QN1_C", "PR_QN1_D", "PR_QN1_E", "PR_QN1_F", "PR_QN1_G", "PR_QN1_H",
       "PR_QO1_A_COMBINE", "PR_QO1_B_COMBINE", "PR_QO1_C_COMBINE", "PR_QO1_D_COMBINE", "PR_QO1_E_COMBINE"];
@@ -276,12 +276,18 @@ export default function ChildWizardPage() {
   const handleNext = () => {
     if (step === 0 && !validateStep0()) return;
     if (step === 1 && !validateStep1()) return;
-    if (step === 3) { handleSubmit(); return; }
+    if (step === 3) {
+      console.log("Submit");
+      handleSubmit();
+      return;
+    }
     setStep(s => s + 1);
   };
 
   // ── Soumission ────────────────────────────────────────────────
   const handleSubmit = async () => {
+    console.log("Submit func");
+
     if (!validateStep3()) return;
     setLoading(true); setSubmitErr(""); setStep(4);
 
@@ -329,6 +335,30 @@ export default function ChildWizardPage() {
       // PR_QN1_A = 0 par défaut (sera remplacé automatiquement par Python
       // après calcul TSA : tsa_detected → 2, sinon → 0)
       fd.append("PR_QN1_A", 1);
+      fd.append("PR_Q3D", info.gender === "M" ? 1 : 2);
+      let age = new Date().getFullYear() - new Date(info.birthDate).getFullYear();
+      console.log(age);
+      switch (true) {
+        case age < 25:
+          fd.append("PR_AGE1", 1);
+          break;
+        case age < 35:
+          fd.append("PR_AGE1", 2);
+          break;
+        case age < 45:
+          fd.append("PR_AGE1", 3);
+          break;
+        case age < 55:
+          fd.append("PR_AGE1", 4);
+          break;
+        case age >= 65:
+          fd.append("PR_AGE1", 5);
+          break;
+        default:
+          fd.append("PR_AGE1", 5);
+      }
+      console.log(fd.get("PR_AGE1"));
+      
 
       const childRes = await api.post("/children", fd, { headers: { "Content-Type": "multipart/form-data" } });
       const childId = childRes.data._id || childRes.data.id;
@@ -567,7 +597,7 @@ export default function ChildWizardPage() {
               </Box>
 
               {/* Démographie */}
-              <SectionChip label="Démographie" />
+              {/* <SectionChip label="Démographie" />
               <RadioBlock label={t("wizard.ds.age")} value={ds.PR_AGE1}
                 onChange={v => setDs(d => ({ ...d, PR_AGE1: v }))}
                 opts={[1, 2, 3, 4, 5, 6].map(i => t(`wizard.ds.ageOpts.${i}`))}
@@ -576,7 +606,7 @@ export default function ChildWizardPage() {
               <RadioBlock label={t("wizard.ds.gender")} value={ds.PR_Q3D}
                 onChange={v => setDs(d => ({ ...d, PR_Q3D: v }))}
                 opts={[1, 2].map(i => t(`wizard.ds.genderOpts.${i}`))}
-                error={fieldErr.PR_Q3D} row />
+                error={fieldErr.PR_Q3D} row /> */}
 
               {/* Communication */}
               <SectionChip label={t("wizard.ds.commSection")} />

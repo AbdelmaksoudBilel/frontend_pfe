@@ -241,7 +241,7 @@ export default function DiagnosticPage() {
                 <Box sx={{ display: "flex", alignItems: "center", gap: 3, flexWrap: "wrap" }}>
                   {/* Photo */}
                   {child.facePhotoUrl ? (
-                    <Avatar src={`${BASE_URL}${child.facePhotoUrl}`}
+                    <Avatar src={`${child.facePhotoUrl}`}
                       sx={{ width: 80, height: 80, border: "3px solid", borderColor: cfg?.color || "divider" }} />
                   ) : (
                     <Avatar sx={{ width: 80, height: 80, bgcolor: cfg?.bg || "background.blue",

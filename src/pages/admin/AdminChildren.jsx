@@ -107,7 +107,7 @@ function ChildDetailsDialog({ child, open, onClose }) {
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             {child.facePhotoUrl ? (
-              <Avatar src={`${BASE_URL}${child.facePhotoUrl}`}
+              <Avatar src={`${child.facePhotoUrl}`}
                 sx={{ width: 48, height: 48, border: "2px solid", borderColor: cfg?.color || "divider" }} />
             ) : (
               <Avatar sx={{
@@ -564,7 +564,7 @@ export default function AdminChildren() {
                       {/* Header */}
                       <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
                         {child.facePhotoUrl ? (
-                          <Avatar src={`${BASE_URL}${child.facePhotoUrl}`}
+                          <Avatar src={`${child.facePhotoUrl}`}
                             sx={{ width: 52, height: 52, border: "2px solid", borderColor: cfg?.color || "divider" }} />
                         ) : (
                           <Avatar sx={{

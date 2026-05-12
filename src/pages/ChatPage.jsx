@@ -93,7 +93,7 @@ function MessageBubble({ msg, isLast, onHelpful, user }) {
           {msg.fileUrl && msg.fileType && (
             <Box sx={{ mb: 0.5 }}>
               {msg.fileType.startsWith("image")
-                ? <Box component="img" src={`${import.meta.env.VITE_API_URL?.replace("api", "") || "http://localhost:3001/"}${msg.fileUrl}`} sx={{ maxWidth: 220, maxHeight: 180, borderRadius: 3, objectFit: "cover", display: "block" }} />
+                ? <Box component="img" src={`${msg.fileUrl}`} sx={{ maxWidth: 220, maxHeight: 180, borderRadius: 3, objectFit: "cover", display: "block" }} />
                 : <Box sx={{ display: "flex", alignItems: "center", gap: 1, p: 1.5, bgcolor: "background.subtle", borderRadius: 2, border: "1px solid", borderColor: "divider" }}><VideocamIcon sx={{ color: "primary.main" }} /><AppText variant="caption" sx={{ color: "text.primary" }}>Vidéo envoyée</AppText></Box>
               }
             </Box>
