@@ -40,6 +40,10 @@ import { useTranslation } from "../hooks/useTranslation";
 import logo from "../assets/logo.png";
 import FaceIcon from '@mui/icons-material/Face';
 import Face2Icon from '@mui/icons-material/Face2';
+import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
+import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
+import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 
 
 // ─────────────────────────────────────────────────────────────────
@@ -118,10 +122,10 @@ function calcQChat(raw) {
 }
 
 const PROFILE_CFG = {
-  TSA: { color: "#3BBDE8", bg: "#EBF7FE", icon: "🧠" },
-  RM: { color: "#F5A623", bg: "#FFF8EE", icon: "📚" },
-  MIXTE: { color: "#9F7AEA", bg: "#F3F0FF", icon: "🔀" },
-  Normal: { color: "#48BB78", bg: "#E6F7EE", icon: "✅" },
+  TSA   : { color: "#3BBDE8", bg: "#EBF7FE", icon: <ExtensionOutlinedIcon  sx={{ color: "#3BBDE8", fontSize: 100 }} /> },
+  RM    : { color: "#F5A623", bg: "#FFF8EE", icon: <LibraryBooksOutlinedIcon sx={{ color: "#F5A623", fontSize: 100 }} /> },
+  MIXTE : { color: "#9F7AEA", bg: "#F3F0FF", icon: <PeopleOutlinedIcon sx={{ color: "#9F7AEA", fontSize: 100 }} /> },
+  Normal: { color: "#48BB78", bg: "#E6F7EE", icon: <CheckCircleOutlinedIcon sx={{ color: "#48BB78", fontSize: 100 }} /> },
 };
 
 const Connector = styled(StepConnector)(({ theme }) => ({
@@ -710,7 +714,7 @@ export default function ChildWizardPage() {
               )}
               {!loading && result && (
                 <Box>
-                  <AppText variant="h4" sx={{ mb: 3, fontWeight: 900 }}>🎯 {t("wizard.step5Title")}</AppText>
+                  <AppText variant="h4" sx={{ mb: 3, fontWeight: 900 }}>{t("wizard.step5Title")}</AppText>
 
                   {/* Résumé enfant */}
                   <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3, p: 2, bgcolor: "background.subtle", borderRadius: 3, border: "1px solid", borderColor: "divider" }}>
@@ -763,12 +767,12 @@ export default function ChildWizardPage() {
                   {/* Late Fusion */}
                   <Box sx={{ p: 2.5, borderRadius: 3, border: "1.5px solid", borderColor: "divider", mb: 3 }}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
-                      <AppText variant="body2" sx={{ fontWeight: 800 }}>⚡ Late Fusion</AppText>
+                      <AppText variant="body2" sx={{ fontWeight: 800 }}>Late Fusion</AppText>
                       <Tooltip title="logit(P) = 0.556×logit(ML) + 0.444×logit(CNN) → sigmoid">
                         <InfoOutlinedIcon sx={{ fontSize: 16, color: "text.disabled", cursor: "help" }} />
                       </Tooltip>
                     </Box>
-                    <ProbBar label={t("diagnostic.probTSA")} value={result.prob_tsa} color="#3BBDE8" icon="⚡" />
+                    <ProbBar label={t("diagnostic.probTSA")} value={result.prob_tsa} color="#3BBDE8" icon='' />
                   </Box>
 
                   {/* Note médicale */}
