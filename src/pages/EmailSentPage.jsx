@@ -10,7 +10,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import AppButton from "../components/atoms/AppButton";
 import AppText from "../components/atoms/AppText";
 
-import logo from "../assets/logo.png";
+import logo from "../assets/logo_pcai.png";
 
 import EmailIcon from '@mui/icons-material/Email';
 import HourglassTopOutlinedIcon from '@mui/icons-material/HourglassTopOutlined';
@@ -47,7 +47,7 @@ export default function EmailSentPage() {
             display: "flex", alignItems: "center", justifyContent: "center",
             fontSize: 24,
           }}>
-            <img width={150} src={logo} alt="Logo" srcset="" />
+            <img width={100} src={logo} alt="Logo" srcset="" />
           </Box>
         </Box>
 

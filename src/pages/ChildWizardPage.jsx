@@ -37,7 +37,7 @@ import AppText from "../components/atoms/AppText";
 import api from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 import { useTranslation } from "../hooks/useTranslation";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo_pcai.png";
 import FaceIcon from '@mui/icons-material/Face';
 import Face2Icon from '@mui/icons-material/Face2';
 import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
@@ -404,7 +404,7 @@ export default function ChildWizardPage() {
 
         {/* Logo + titre */}
         <Box sx={{ textAlign: "center", mb: 4 }}>
-          <img width={150} src={logo} alt="Logo" style={{ display: "block", margin: "0 auto 12px" }} />
+          <img width={100} src={logo} alt="Logo" style={{ display: "block", margin: "0 auto 12px" }} />
           <AppText variant="h4" sx={{ fontWeight: 900 }}>{t("wizard.title")}</AppText>
           {user?.firstName && (
             <AppText variant="body2" color="text.secondary">{t("wizard.welcome")} <strong>{user.firstName}</strong> — {t("wizard.welcomeMsg")}</AppText>

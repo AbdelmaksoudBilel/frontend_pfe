@@ -18,7 +18,7 @@ import { useAuth }        from "../../hooks/useAuth";
 import { useTranslation } from "../../hooks/useTranslation";
 import { setUser }        from "../../store/slices/authSlice";
 import api                from "../../services/api";
-import logo               from "../../assets/logo.png";
+import logo               from "../../assets/logo_pcai.png";
 
 const SIDEBAR_W = 260;
 
@@ -85,7 +85,7 @@ function SidebarContent({ location, navigate, onClose, user, logout, t, isRTL, d
       {/* Logo + badge */}
       <Box sx={{ px: 3, py: 2.5, borderBottom: "1px solid", borderColor: "divider" }}>
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <img width={100} src={logo} alt="Logo" />
+          <img width={50} src={logo} alt="Logo" style={{ marginBottom:-8 }} />
           <Chip label={t("adminLayout.admin")} size="small"
             sx={{ bgcolor: "background.orange", color: "secondary.dark", fontWeight: 800, fontSize: "0.68rem" }} />
         </Box>

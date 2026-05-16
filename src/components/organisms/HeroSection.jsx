@@ -5,7 +5,7 @@ import AppBadge       from "../atoms/AppBadge";
 import StatItem       from "../molecules/StatItem";
 import ChatBubble     from "../molecules/ChatBubble";
 import FloatingBadge  from "../molecules/FloatingBadge";
-import logo from "../../assets/mini_logo.png";
+import logo from "../../assets/logo_pcai.png";
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 
@@ -22,7 +22,7 @@ export default function HeroSection({ onStart, onLearnMore }) {
           {/* ── Texte gauche ── */}
           <Grid item xs={12} md={6}>
             <AppBadge
-              label="Assistant Intelligent pour parents — TSA & DI"
+              label="Parents Chance AI"
               color="primary.dark" dot
               sx={{ mb: 2.5, bgcolor: "background.blue" }}
             />
@@ -74,11 +74,11 @@ export default function HeroSection({ onStart, onLearnMore }) {
                 {/* Chat header */}
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2, pb: 2, borderBottom: "1px solid", borderColor: "divider" }}>
                   <Box sx={{ width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, flexShrink: 0 }}>
-                    <img width={40} src={logo} alt="Logo" srcset="" />
+                    <img width={30} src={logo} alt="Logo" srcset="" />
                   </Box>
                   <Box>
-                    <AppText variant="caption" sx={{ fontWeight: 800, color: "text.primary", display: "block" }}>
-                      Assistant Ma <Box component="span" sx={{ color: "primary.main" }}>CHANCE</Box>
+                    <AppText variant="caption" sx={{ fontWeight: 800, color: "text.secondary", display: "block" }}>
+                      Parents <Box component="span" sx={{ color: "primary.main" }}>CHANCE</Box> AI
                     </AppText>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                       <Box sx={{ width: 6, height: 6, borderRadius: "50%", bgcolor: "success.main" }} />

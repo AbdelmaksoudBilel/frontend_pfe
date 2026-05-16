@@ -30,6 +30,7 @@ import AppButton from "../components/atoms/AppButton";
 import { useAuth } from "../hooks/useAuth";
 import { useTranslation } from "../hooks/useTranslation";
 import api from "../services/api";
+import logo from "../assets/logo_pcai.png";
 
 const SIDEBAR_W = 300;
 
@@ -323,7 +324,7 @@ export default function ChatPage() {
           </Avatar>
           <Box sx={{ flex: 1, minWidth: 0 }}>
             <AppText variant="body2" sx={{ fontWeight: 700, color: "text.primary", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.firstName} {user?.lastName}</AppText>
-            <AppText variant="caption" color="text.disabled">{t("chat.sidebar.parentLabel")}</AppText>
+            <AppText variant="caption" color="text.disabled">Parent Chance AI</AppText>
           </Box>
           <IconButton size="small"><MoreVertIcon sx={{ fontSize: 18 }} /></IconButton>
         </Box>
@@ -394,13 +395,14 @@ export default function ChatPage() {
     </Box>
   );
 
+
   // ── CHAT ZONE ─────────────────────────────────────────────────────────────
   const chatZone = (
     <Box sx={{ flex: 1, display: "flex", flexDirection: "column", height: "100%", bgcolor: "background.default", overflow: "hidden" }} dir={isRTL ? "rtl" : "ltr"}>
       {/* Header */}
       <Box sx={{ px: 2.5, py: 1.5, borderBottom: "1px solid", borderColor: "divider", display: "flex", alignItems: "center", gap: 1.5, bgcolor: "white", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
         {isMobile && (<IconButton size="small" onClick={() => setSidebarOpen(true)}><MenuIcon /></IconButton>)}
-        <Avatar sx={{ width: 36, height: 36, bgcolor: "primary.main" }}><SmartToyIcon sx={{ fontSize: 18 }} /></Avatar>
+        <img width={30} src={logo} alt="Logo" srcset="" style={{ marginBottom: -2 }} />
         <Box sx={{ flex: 1 }}>
           <AppText variant="body2" sx={{ fontWeight: 800 }}>{activeConv?.name || t("chat.title")}</AppText>
         </Box>

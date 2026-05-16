@@ -21,8 +21,7 @@ import AppButton from "../components/atoms/AppButton";
 import AppText   from "../components/atoms/AppText";
 import { useAuth } from "../hooks/useAuth";
 
-import logo from "../assets/logo.png";
-import mini_logo from "../assets/mini_logo.png";
+import logo from "../assets/logo_pcai.png";
 
 
 // ── Règles mot de passe ───────────────────────────────────────────
@@ -113,7 +112,7 @@ export default function RegisterPage() {
             display: "flex", alignItems: "center", justifyContent: "center",
             fontSize: 26, 
           }}>
-            <img width={150} src={logo} alt="Logo" srcset="" />
+            <img width={100} src={logo} alt="Logo" srcset="" />
           </Box>
         </Box>
 
@@ -305,9 +304,9 @@ export default function RegisterPage() {
           bgcolor:"rgba(255,255,255,0.08)",bottom:-70,left:-70,pointerEvents:"none" }} />
 
         <Box sx={{ position:"relative", zIndex:1, maxWidth:380, textAlign:"center" }}>
-          <Box sx={{ fontSize: 76, mb: -2 }}>
-            <img width={70} src={mini_logo} alt="logo" srcset="" />
-          </Box>
+          {/* <Box sx={{ fontSize: 76, mb: -2 }}>
+            <img width={70} src={logo} alt="logo" srcset="" />
+          </Box> */}
 
           <AppText variant="h2" sx={{ color:"white", mb:2, fontWeight:900 }}>
             Bienvenue dans Ma Chance

@@ -9,7 +9,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import AppButton from "../atoms/AppButton";
 import NavLink from "../molecules/NavLink";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo_pcai.png";
 const NAV_ITEMS = [
   { label: "Accueil",        id: "accueil"  },
   { label: "À propos",       id: "apropos"  },
@@ -59,7 +59,7 @@ export default function Navbar({ onStart }) {
             display: "flex", alignItems: "center", justifyContent: "center",
             gap: 0.8, flexShrink: 0, cursor: "pointer",
           }} onClick={() => scrollTo("accueil")}>
-            <img width={120} src={logo} alt="Logo" srcset="" />
+            <img width={50} src={logo} alt="Logo" srcset="" />
           </Box>
 
           {/* Desktop nav */}

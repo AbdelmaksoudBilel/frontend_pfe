@@ -14,7 +14,7 @@ import AppButton from "../components/atoms/AppButton";
 import AppText   from "../components/atoms/AppText";
 import api       from "../services/api";
 
-import logo from "../assets/logo.png";
+import logo from "../assets/logo_pcai.png";
 
 
 const PWD_RULES = [
@@ -230,7 +230,7 @@ function PageWrapper({ children }) {
             display:"flex", alignItems:"center", justifyContent:"center",
             fontSize:24,
           }}>
-            <img width={150} src={logo} alt="Logo" srcset="" />
+            <img width={100} src={logo} alt="Logo" srcset="" />
           </Box>
         </Box>
         {children}

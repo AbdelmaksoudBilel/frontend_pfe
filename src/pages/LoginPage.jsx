@@ -21,8 +21,7 @@ import AppButton from "../components/atoms/AppButton";
 import AppText   from "../components/atoms/AppText";
 import { useAuth } from "../hooks/useAuth";
 
-import logo from "../assets/logo.png";
-import mini_logo from "../assets/mini_logo.png";
+import logo from "../assets/logo_pcai.png";
 
 import BarChartIcon from '@mui/icons-material/BarChart';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
@@ -111,7 +110,7 @@ export default function LoginPage() {
             display: "flex", alignItems: "center", justifyContent: "center",
             fontSize: 26, 
           }}>
-            <img width={150} src={logo} alt="Logo" srcset="" />
+            <img width={100} src={logo} alt="Logo" srcset="" />
           </Box>
         </Box>
 
@@ -235,9 +234,9 @@ export default function LoginPage() {
           bgcolor:"rgba(245,166,35,0.15)",bottom:80,right:40,pointerEvents:"none" }} />
 
         <Box sx={{ position: "relative", zIndex: 1, maxWidth: 400, textAlign: "center" }}>
-          <Box sx={{ fontSize: 72, mb:-3}}>
-            <img width={70} src={mini_logo} alt="logo" srcset=""/>
-          </Box>
+          {/* <Box sx={{ fontSize: 72, mb:-3}}>
+            <img width={70} src={logo} alt="logo" srcset=""/>
+          </Box> */}
           <AppText variant="h2" sx={{ color: "white", mb: 2, fontWeight: 900 }}>
             Accompagnez votre enfant avec confiance
           </AppText>

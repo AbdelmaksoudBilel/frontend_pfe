@@ -4,7 +4,7 @@ import AppText     from "../atoms/AppText";
 import AppButton   from "../atoms/AppButton";
 import SectionLabel  from "../atoms/SectionLabel";
 import ContactCard   from "../molecules/ContactCard";
-import logo from "../../assets/mini_logo.png";
+import logo from "../../assets/logo_pcai.png";
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import EmailIcon from '@mui/icons-material/Email';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
@@ -42,10 +42,12 @@ export default function ContactSection() {
         {/* CTA final */}
         <Box sx={{ bgcolor: "background.default", borderRadius: 4, p: { xs: 4, md: 7 }, textAlign: "center", border: "1.5px solid", borderColor: "divider", boxShadow: "0 12px 40px rgba(59,189,232,0.08)" }}>
           <Box sx={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 68, height: 68, mb: 3, fontSize: 26 }}>
-            <img width={90} src={logo} alt="Logo" srcset="" />
+            <img width={100} src={logo} alt="Logo" srcset="" />
           </Box>
-          <AppText variant="h2" gutterBottom>Prêt à commencer votre accompagnement ?</AppText>
-          <AppText variant="body1" sx={{ maxWidth: 500, mx: "auto", mb: 4 }}>
+          <AppText variant="h2" gutterBottom sx={{ textAlign: "center" }}>
+            Prêt à commencer votre accompagnement ?
+          </AppText>
+          <AppText variant="body1" sx={{ maxWidth: 500, mx: "auto", mb: 4, textAlign: "center" }}>
             Créez votre compte, remplissez le profil de votre enfant et accédez à des conseils personnalisés en quelques minutes.
           </AppText>
           <Box sx={{ display: "flex", gap: 2, justifyContent: "center", flexWrap: "wrap" }}>
